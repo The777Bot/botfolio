@@ -1,8 +1,9 @@
 .wiggly-worm {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-  background: black;
+   background: radial-gradient(circle at 50% 50%, #0400ff, rgb(255, 0, 0), #ff7b0000);
+  box-shadow: 0 0 30px #ff0000;
   position: fixed;
   top: 0;
   left: 0;
@@ -10,9 +11,21 @@
   z-index: 1000;
 }
 
+.trail-dot {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: fixed;
+  background: radial-gradient(circle, #0400ff, rgb(255, 0, 0));
+  pointer-events: none;
+  z-index: 999;
+  transform: translate(40%, 40%);
+  mix-blend-mode: screen;
+}
+
 /* Chaos mode background effect */
 body.chaos {
-  animation: flash 0.1s infinite;
+  animation: flash 1s infinite;
 }
 
 @keyframes flash {

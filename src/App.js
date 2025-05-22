@@ -1,9 +1,11 @@
 import React from 'react';
 import WigglyWorm from './components/WigglyWorm';
+import WavyBlob from './components/WavyBlob';
 
 function App() {
   return (
     <div className="App">
+      <WavyBlob />
       <WigglyWorm />
       <h1 style={{ textAlign: 'center', marginTop: '50vh' }}>
         Welcome to Botfolio 🧠<br />

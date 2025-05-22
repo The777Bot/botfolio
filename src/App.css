@@ -1,3 +1,32 @@
+body {
+  background: radial-gradient(circle, #111 0%, #000 100%);
+  animation: bgPulse 8s infinite alternate;
+  transition: background 1s;
+  overflow: hidden;
+  margin: 0;
+}
+
+@keyframes bgPulse {
+  0% {
+    background: radial-gradient(circle, #111 0%, #000 100%);
+  }
+  100% {
+    background: radial-gradient(circle, #222 0%, #111 100%);
+  }
+}
+
+body.chaos {
+  background: repeating-linear-gradient(
+    45deg,
+    #ff0000,
+    #ff9900 10px,
+    #00ffcc 20px,
+    #0000ff 30px
+  );
+  animation: none;
+}
+
+
 .App {
   text-align: center;
 }
