@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { Howl } from 'howler';
 
 const chaosSound = new Howl({
-  src: ['https://actions.google.com/sounds/v1/alarms/beep_short.ogg'],
+  src: ['https://freesound.org/data/previews/331/331912_3248244-lq.mp3'], // 8-bit alert sound
   loop: true,
   volume: 0.5,
 });
@@ -70,7 +70,7 @@ export default function WigglyWorm() {
       eyeOffsetX.set((e.clientX % 20 - 10) / 2);
       eyeOffsetY.set((e.clientY % 20 - 10) / 2);
 
-      if (speed > 40 && !isChaos) {
+      if (speed > 130 && !isChaos) {
         setIsChaos(true);
         chaosSound.play();
         document.body.classList.add('chaos');
@@ -120,30 +120,26 @@ export default function WigglyWorm() {
       />
 
       {/* Eyes */}
-      <motion.circle cx={85} cy={90} r={10} fill="#fff" />
-      <motion.circle cx={115} cy={90} r={10} fill="#fff" />
+      <motion.rect x={78} y={83} width={14} height={14} fill="#fff" />
+<motion.rect x={108} y={83} width={14} height={14} fill="#fff" />
 
-      {/* Pupils */}
-      <motion.circle
-        cx={85}
-        cy={90}
-        r={5}
-        fill="#000"
-        style={{
-          x: eyeOffsetX,
-          y: eyeOffsetY
-        }}
-      />
-      <motion.circle
-        cx={115}
-        cy={90}
-        r={5}
-        fill="#000"
-        style={{
-          x: eyeOffsetX,
-          y: eyeOffsetY
-        }}
-      />
+<motion.rect
+  x={85}
+  y={90}
+  width={6}
+  height={6}
+  fill="#000"
+  style={{ x: eyeOffsetX, y: eyeOffsetY }}
+/>
+<motion.rect
+  x={115}
+  y={90}
+  width={6}
+  height={6}
+  fill="#000"
+  style={{ x: eyeOffsetX, y: eyeOffsetY }}
+/>
+
     </motion.svg>
   );
 }
