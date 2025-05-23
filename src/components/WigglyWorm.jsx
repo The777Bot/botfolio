@@ -19,7 +19,6 @@ const blobs = [
   }
 ];
 
-
 export default function WigglyWorm() {
   const [pathIndex, setPathIndex] = useState(0);
   const [isChaos, setIsChaos] = useState(false);
@@ -29,7 +28,15 @@ export default function WigglyWorm() {
   const springX = useSpring(x, { stiffness: 100, damping: 15 });
   const springY = useSpring(y, { stiffness: 100, damping: 15 });
 
+  const offsetX = useMotionValue(200);
+  const offsetY = useMotionValue(200);
+  const eyeOffsetX = useMotionValue(0);
+  const eyeOffsetY = useMotionValue(0);
+
   useEffect(() => {
+    const unsubX = springX.on("change", v => offsetX.set(v - 90));
+    const unsubY = springY.on("change", v => offsetY.set(v - 90));
+
     const morphTimer = setInterval(() => {
       if (!isChaos) {
         setPathIndex((prev) => (prev + 1) % blobs.length);
@@ -37,26 +44,45 @@ export default function WigglyWorm() {
     }, 3000);
 
     let shakeTimer = null;
+    let flashInterval = null;
+
+    const startChaosFlashes = () => {
+      let hue = 0;
+      flashInterval = setInterval(() => {
+        document.body.style.backgroundColor = `hsl(${hue}, 100%, 80%)`;
+        hue = (hue + 40) % 360;
+      }, 80);
+    };
+
+    const stopChaosFlashes = () => {
+      clearInterval(flashInterval);
+      document.body.style.backgroundColor = '';
+    };
 
     const handleMouseMove = (e) => {
       const dx = e.movementX;
       const dy = e.movementY;
       const speed = Math.sqrt(dx * dx + dy * dy);
 
-      x.set(e.clientX - 100);
-      y.set(e.clientY - 100);
+      x.set(e.clientX - 250);
+      y.set(e.clientY + 100);
+
+      eyeOffsetX.set((e.clientX % 20 - 10) / 2);
+      eyeOffsetY.set((e.clientY % 20 - 10) / 2);
 
       if (speed > 40 && !isChaos) {
         setIsChaos(true);
         chaosSound.play();
         document.body.classList.add('chaos');
         setPathIndex(1);
+        startChaosFlashes();
 
         clearTimeout(shakeTimer);
         shakeTimer = setTimeout(() => {
           setIsChaos(false);
           chaosSound.stop();
           document.body.classList.remove('chaos');
+          stopChaosFlashes();
         }, 2000);
       }
     };
@@ -65,63 +91,59 @@ export default function WigglyWorm() {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       chaosSound.stop();
+      stopChaosFlashes();
       document.body.classList.remove('chaos');
       clearInterval(morphTimer);
+      unsubX();
+      unsubY();
     };
   }, [x, y, isChaos]);
 
   return (
-    <>
-      <motion.svg
-        viewBox="0 0 200 200"
-        style={{
-          width: 200,
-          height: 200,
-          position: 'fixed',
-          pointerEvents: 'none',
-          zIndex: 1000,
-          x: springX,
-          y: springY
-        }}
-      >
-        <motion.path
-          fill={blobs[pathIndex].color}
-          animate={{ d: blobs[pathIndex].path }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-          transform="translate(100 100)"
-        />
-      </motion.svg>
+    <motion.svg
+      viewBox="0 0 200 200"
+      style={{
+        width: 200,
+        height: 200,
+        position: 'fixed',
+        pointerEvents: 'none',
+        zIndex: 1000,
+        x: offsetX,
+        y: offsetY,
+      }}
+    >
+      <motion.path
+        fill={blobs[pathIndex].color}
+        animate={{ d: blobs[pathIndex].path }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
+        transform="translate(100 100)"
+      />
 
       {/* Eyes */}
-      <motion.div
+      <motion.circle cx={85} cy={90} r={10} fill="#fff" />
+      <motion.circle cx={115} cy={90} r={10} fill="#fff" />
+
+      {/* Pupils */}
+      <motion.circle
+        cx={85}
+        cy={90}
+        r={5}
+        fill="#000"
         style={{
-          position: 'fixed',
-          x: springX,
-          y: springY,
-          width: 200,
-          height: 200,
-          pointerEvents: 'none',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          x: eyeOffsetX,
+          y: eyeOffsetY
         }}
-      >
-        <div style={{ display: 'flex', gap: 20 }}>
-          <div style={{
-            width: 14,
-            height: 14,
-            background: '#000',
-            borderRadius: '50%'
-          }} />
-          <div style={{
-            width: 14,
-            height: 14,
-            background: '#000',
-            borderRadius: '50%'
-          }} />
-        </div>
-      </motion.div>
-    </>
+      />
+      <motion.circle
+        cx={115}
+        cy={90}
+        r={5}
+        fill="#000"
+        style={{
+          x: eyeOffsetX,
+          y: eyeOffsetY
+        }}
+      />
+    </motion.svg>
   );
 }
