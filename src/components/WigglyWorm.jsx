@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { Howl } from 'howler';
 
+
 const chaosSound = new Howl({
   src: ['https://freesound.org/data/previews/331/331912_3248244-lq.mp3'], // 8-bit alert sound
   loop: true,
@@ -165,5 +166,6 @@ export default function WigglyWorm() {
         style={{ x: eyeOffsetX, y: eyeOffsetY }}
       />
     </motion.svg>
+    
   );
 }
