@@ -22,6 +22,7 @@ const blobs = [
 export default function WigglyWorm() {
   const [pathIndex, setPathIndex] = useState(0);
   const [isChaos, setIsChaos] = useState(false);
+  const [lastTouch, setLastTouch] = useState({ x: 0, y: 0 });
 
   const x = useMotionValue(200);
   const y = useMotionValue(200);
@@ -33,6 +34,50 @@ export default function WigglyWorm() {
   const eyeOffsetX = useMotionValue(0);
   const eyeOffsetY = useMotionValue(0);
 
+  const handleMovement = (clientX, clientY, movementX = 0, movementY = 0) => {
+    const dx = movementX;
+    const dy = movementY;
+    const speed = Math.sqrt(dx * dx + dy * dy);
+
+    x.set(clientX - 250);
+    y.set(clientY + 100);
+
+    eyeOffsetX.set((clientX % 20 - 10) / 2);
+    eyeOffsetY.set((clientY % 20 - 10) / 2);
+
+    if (speed > 130 && !isChaos) {
+      setIsChaos(true);
+      chaosSound.play();
+      document.body.classList.add('chaos');
+      setPathIndex(1);
+      startChaosFlashes();
+
+      clearTimeout(shakeTimer);
+      shakeTimer = setTimeout(() => {
+        setIsChaos(false);
+        chaosSound.stop();
+        document.body.classList.remove('chaos');
+        stopChaosFlashes();
+      }, 2000);
+    }
+  };
+
+  let shakeTimer = null;
+  let flashInterval = null;
+
+  const startChaosFlashes = () => {
+    let hue = 0;
+    flashInterval = setInterval(() => {
+      document.body.style.backgroundColor = `hsl(${hue}, 100%, 80%)`;
+      hue = (hue + 40) % 360;
+    }, 80);
+  };
+
+  const stopChaosFlashes = () => {
+    clearInterval(flashInterval);
+    document.body.style.backgroundColor = '';
+  };
+
   useEffect(() => {
     const unsubX = springX.on("change", v => offsetX.set(v - 90));
     const unsubY = springY.on("change", v => offsetY.set(v - 90));
@@ -43,53 +88,33 @@ export default function WigglyWorm() {
       }
     }, 3000);
 
-    let shakeTimer = null;
-    let flashInterval = null;
-
-    const startChaosFlashes = () => {
-      let hue = 0;
-      flashInterval = setInterval(() => {
-        document.body.style.backgroundColor = `hsl(${hue}, 100%, 80%)`;
-        hue = (hue + 40) % 360;
-      }, 80);
-    };
-
-    const stopChaosFlashes = () => {
-      clearInterval(flashInterval);
-      document.body.style.backgroundColor = '';
-    };
-
     const handleMouseMove = (e) => {
-      const dx = e.movementX;
-      const dy = e.movementY;
-      const speed = Math.sqrt(dx * dx + dy * dy);
+      handleMovement(e.clientX, e.clientY, e.movementX, e.movementY);
+    };
 
-      x.set(e.clientX - 250);
-      y.set(e.clientY + 100);
+    const handleTouchMove = (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const movementX = touch.clientX - lastTouch.x;
+      const movementY = touch.clientY - lastTouch.y;
+      
+      setLastTouch({ x: touch.clientX, y: touch.clientY });
+      handleMovement(touch.clientX, touch.clientY, movementX, movementY);
+    };
 
-      eyeOffsetX.set((e.clientX % 20 - 10) / 2);
-      eyeOffsetY.set((e.clientY % 20 - 10) / 2);
-
-      if (speed > 130 && !isChaos) {
-        setIsChaos(true);
-        chaosSound.play();
-        document.body.classList.add('chaos');
-        setPathIndex(1);
-        startChaosFlashes();
-
-        clearTimeout(shakeTimer);
-        shakeTimer = setTimeout(() => {
-          setIsChaos(false);
-          chaosSound.stop();
-          document.body.classList.remove('chaos');
-          stopChaosFlashes();
-        }, 2000);
-      }
+    const handleTouchStart = (e) => {
+      const touch = e.touches[0];
+      setLastTouch({ x: touch.clientX, y: touch.clientY });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart);
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchstart', handleTouchStart);
       chaosSound.stop();
       stopChaosFlashes();
       document.body.classList.remove('chaos');
@@ -97,7 +122,7 @@ export default function WigglyWorm() {
       unsubX();
       unsubY();
     };
-  }, [x, y, isChaos]);
+  }, [x, y, isChaos, lastTouch]);
 
   return (
     <motion.svg
@@ -121,25 +146,24 @@ export default function WigglyWorm() {
 
       {/* Eyes */}
       <motion.rect x={78} y={83} width={14} height={14} fill="#fff" />
-<motion.rect x={108} y={83} width={14} height={14} fill="#fff" />
+      <motion.rect x={108} y={83} width={14} height={14} fill="#fff" />
 
-<motion.rect
-  x={85}
-  y={90}
-  width={6}
-  height={6}
-  fill="#000"
-  style={{ x: eyeOffsetX, y: eyeOffsetY }}
-/>
-<motion.rect
-  x={115}
-  y={90}
-  width={6}
-  height={6}
-  fill="#000"
-  style={{ x: eyeOffsetX, y: eyeOffsetY }}
-/>
-
+      <motion.rect
+        x={85}
+        y={90}
+        width={6}
+        height={6}
+        fill="#000"
+        style={{ x: eyeOffsetX, y: eyeOffsetY }}
+      />
+      <motion.rect
+        x={115}
+        y={90}
+        width={6}
+        height={6}
+        fill="#000"
+        style={{ x: eyeOffsetX, y: eyeOffsetY }}
+      />
     </motion.svg>
   );
 }
