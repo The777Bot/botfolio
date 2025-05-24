@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { Howl } from 'howler';
 
 
+
 const chaosSound = new Howl({
   src: ['https://freesound.org/data/previews/331/331912_3248244-lq.mp3'], // 8-bit alert sound
   loop: true,
@@ -21,9 +22,18 @@ const blobs = [
 ];
 
 export default function WigglyWorm() {
+  const [blobPos, setBlobPos] = useState({ x: 200, y: 200 });
   const [pathIndex, setPathIndex] = useState(0);
   const [isChaos, setIsChaos] = useState(false);
   const [lastTouch, setLastTouch] = useState({ x: 0, y: 0 });
+  const [emotion, setEmotion] = useState('idle');
+
+  function textEmotionLabel(emotion) {
+    if (emotion === 'angry') return <text x="100" y="180" textAnchor="middle" fill="#fff" fontSize="10" fontFamily="Press Start 2P">😠 ANGRY</text>;
+    if (emotion === 'happy') return <text x="100" y="180" textAnchor="middle" fill="#fff" fontSize="10" fontFamily="Press Start 2P">😊 HAPPY</text>;
+    if (emotion === 'sad') return <text x="100" y="180" textAnchor="middle" fill="#fff" fontSize="10" fontFamily="Press Start 2P">😢 SAD</text>;
+    return null;
+  }
 
   const x = useMotionValue(200);
   const y = useMotionValue(200);
@@ -39,6 +49,8 @@ export default function WigglyWorm() {
     const dx = movementX;
     const dy = movementY;
     const speed = Math.sqrt(dx * dx + dy * dy);
+    setBlobPos({ x: clientX, y: clientY });
+
 
     x.set(clientX - 250);
     y.set(clientY + 100);
@@ -108,14 +120,32 @@ export default function WigglyWorm() {
       setLastTouch({ x: touch.clientX, y: touch.clientY });
     };
 
+    const handleClick = (e) => {
+      const dx = e.clientX - blobPos.x;
+      const dy = e.clientY - blobPos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+    
+      if (distance < 1000) {
+        // Blob is caught!
+        const emotions = ['happy', 'angry', 'sad'];
+        const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+        setEmotion(randomEmotion);
+      }
+    };
+    
+    window.addEventListener('click', handleClick);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('touchstart', handleTouchStart);
+
+   
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('click', handleClick);
+
       chaosSound.stop();
       stopChaosFlashes();
       document.body.classList.remove('chaos');
@@ -132,14 +162,26 @@ export default function WigglyWorm() {
         width: 200,
         height: 200,
         position: 'fixed',
-        pointerEvents: 'none',
+        pointerEvents: 'auto',
         zIndex: 1000,
         x: offsetX,
         y: offsetY,
       }}
+      onClick={() => {
+        setEmotion(prev =>
+          prev === 'idle' ? 'angry' :
+          prev === 'angry' ? 'happy' :
+          prev === 'happy' ? 'sad' : 'idle'
+        );
+      }}
     >
       <motion.path
-        fill={blobs[pathIndex].color}
+        fill={
+          emotion === 'angry' ? '#CC0000' :
+          emotion === 'happy' ? '#FF9900' :
+          emotion === 'sad' ? '	#404040' :
+          blobs[pathIndex].color
+        }
         animate={{ d: blobs[pathIndex].path }}
         transition={{ duration: 0.6, ease: 'easeInOut' }}
         transform="translate(100 100)"
@@ -165,6 +207,35 @@ export default function WigglyWorm() {
         fill="#000"
         style={{ x: eyeOffsetX, y: eyeOffsetY }}
       />
+      {/* Speech Cloud */}
+<g transform="translate(100, 10)">
+  <rect
+    x={-100}
+    y={-30}
+    rx={10}
+    ry={10}
+    width={180}
+    height={40}
+    fill="#fff"
+    stroke="#fff"
+    strokeWidth={5}
+  />
+  <text
+    x={0}
+    y={0}
+    textAnchor="middle"
+    dominantBaseline="middle"
+    fill="#000"
+    fontSize="18"
+    fontFamily="'Press Start 2P', cursive"
+  >
+    Catch me!
+  </text>
+</g>
+
+
+       {textEmotionLabel(emotion)}
+
     </motion.svg>
     
   );
