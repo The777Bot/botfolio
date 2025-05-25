@@ -2,6 +2,7 @@ import './retro.css'; // Import retro style
 import WavyBlob from './components/WavyBlob';
 import WigglyWorm from './components/WigglyWorm';
 import BlackHoleTrap from './components/BlackHoleTrap';
+import RunnerCharacter from './components/RunnerCharacter';
 
 function App() {
   return (
@@ -23,12 +24,16 @@ function App() {
         ubadahme@gmail.com
       </header>
       <BlackHoleTrap />
+      <RunnerCharacter />
       <WavyBlob />
       <WigglyWorm />
       <h1 style={{ textAlign: 'center', marginTop: '-10vh' }}>
-        Welcome to Botfolio 🧠<br />
-        <small>Shake the mouse if you're curious...</small>
-      </h1>
+  <span style={{ fontSize: '3rem', color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
+  <br />
+  <small style={{ fontSize: '1rem', color: '#ccc' }}>
+    Shake the mouse if you're curious...
+  </small>
+</h1>
       
       {/* Retro-style Status Bar */}
       <footer style={{

@@ -1,0 +1,22 @@
+.runner-character {
+    position: fixed;
+    top: 0;
+    left: -80px;
+    width: 80px;
+    height: auto;
+    z-index: 9999;
+    animation: runAround 20s linear infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes runAround {
+    0%   { top: 0; left: -80px; transform: scaleX(1); }
+    25%  { top: 0; left: 100vw; transform: scaleX(1); }
+    26%  { top: 0; left: 100vw; transform: scaleX(-1); }
+    50%  { top: 100vh; left: 100vw; transform: scaleX(-1); }
+    51%  { top: 100vh; left: 100vw; transform: scaleX(1); }
+    75%  { top: 100vh; left: -80px; transform: scaleX(1); }
+    76%  { top: 100vh; left: -80px; transform: scaleX(-1); }
+    100% { top: 0; left: -80px; transform: scaleX(-1); }
+  }
+  
