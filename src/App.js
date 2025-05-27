@@ -1,6 +1,8 @@
 import './retro.css'; // Import retro style
+
 import WavyBlob from './components/WavyBlob';
 import WigglyWorm from './components/WigglyWorm';
+import LightGreyBox from './components/LightGreyBox';
 import BlackHoleTrap from './components/BlackHoleTrap';
 import RunnerCharacter from './components/RunnerCharacter';
 
@@ -24,16 +26,30 @@ function App() {
         ubadahme@gmail.com
       </header>
       <BlackHoleTrap />
+      <div className="bg-black min-h-screen text-white relative">
+        <section
+          className="fixed left-0 top-20 w-1/3 p-4 overflow-y-auto"
+          style={{ 
+            maxHeight: 'calc(100vh - 100px)',
+            color: '#f5d402',
+            //textAlign: 'left',
+            
+          }}
+        >
+          <h2 className="text-3x1 font-bold mb-4">🏗️ IN DEVELOPMENT</h2>
+        </section>
+      </div>
+      <LightGreyBox />
       <RunnerCharacter />
       <WavyBlob />
       <WigglyWorm />
-      <h1 style={{ textAlign: 'center', marginTop: '-10vh' }}>
-  <span style={{ fontSize: '3rem', color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
-  <br />
-  <small style={{ fontSize: '1rem', color: '#ccc' }}>
-    Shake the mouse if you're curious...
-  </small>
-</h1>
+      <h1 style={{ textAlign: 'center', marginTop: '-47vh', marginLeft:'10vh' }}>
+        <span style={{ fontSize: '2.8rem', color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
+        <br />
+        <small style={{ fontSize: '1rem', color: '#ccc' }}>
+          Shake the mouse if you're curious...
+        </small>
+      </h1>
       
       {/* Retro-style Status Bar */}
       <footer style={{
@@ -53,7 +69,5 @@ function App() {
     </div>
   );
 }
-
-
 
 export default App;
