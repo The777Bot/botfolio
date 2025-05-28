@@ -4,6 +4,7 @@ import WavyBlob from './components/WavyBlob';
 import WigglyWorm from './components/WigglyWorm';
 import LightGreyBox from './components/LightGreyBox';
 import BlackHoleTrap from './components/BlackHoleTrap';
+import ArcadeLauncher from './components/ArcadeLauncher';
 import RunnerCharacter from './components/RunnerCharacter';
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
           style={{ 
             maxHeight: 'calc(100vh - 100px)',
             color: '#000000',
-            marginRight: '-95rem',
+            marginRight: '-8rem',
             marginTop: '50rem',
             
           }}
@@ -40,6 +41,10 @@ function App() {
           <h2 className="text-3x1 font-bold mb-4">   IN DEVELOPMENT ...🏗️</h2>
         </section>
       </div>
+      <div className="bg-black min-h-screen text-white relative">
+      {/* Other components */}
+      <ArcadeLauncher />
+    </div>
       <LightGreyBox />
       <RunnerCharacter />
       <WavyBlob />
