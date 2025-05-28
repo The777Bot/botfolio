@@ -31,19 +31,20 @@ function App() {
           className="fixed left-0 top-20 w-1/3 p-4 overflow-y-auto"
           style={{ 
             maxHeight: 'calc(100vh - 100px)',
-            color: '#f5d402',
-            //textAlign: 'left',
+            color: '#000000',
+            marginRight: '-95rem',
+            marginTop: '50rem',
             
           }}
         >
-          <h2 className="text-3x1 font-bold mb-4">🏗️ IN DEVELOPMENT</h2>
+          <h2 className="text-3x1 font-bold mb-4">   IN DEVELOPMENT ...🏗️</h2>
         </section>
       </div>
       <LightGreyBox />
       <RunnerCharacter />
       <WavyBlob />
       <WigglyWorm />
-      <h1 style={{ textAlign: 'center', marginTop: '-47vh', marginLeft:'10vh' }}>
+      <h1 style={{ textAlign: 'center', marginTop: '-50vh', marginLeft:'14vh' }}>
         <span style={{ fontSize: '2.8rem', color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
         <br />
         <small style={{ fontSize: '1rem', color: '#ccc' }}>
