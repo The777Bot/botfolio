@@ -4,20 +4,37 @@
   position: relative;
   cursor: pointer;
   transition: transform 0.3s ease;
+  margin: 2vw auto;
 }
 
 .arcade-button-inner {
   position: relative;
-  border: 4px solid #9bbc0f;
-  border-radius: 8px;
-  padding: 4px;
+  border: 0.2vw solid #9bbc0f;
+  border-radius: 0.4vw;
+  padding: 0.2vw;
   background: #0f380f;
-  box-shadow: 0 0 10px rgba(155, 188, 15, 0.5);
+  width: 15vw;
+  height: 13vw;
+  box-shadow: 0 0 0.5vw rgba(155, 188, 15, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.arcade-button-inner img {
+  display: block;
+  width: 12vw;
+  height: 8vw;
+  object-fit: cover;
+  background-color: #0f380f;
+  border-radius: 0.1vw;
 }
 
 .arcade-button.hover .arcade-button-inner {
   transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(155, 188, 15, 0.8);
+  box-shadow: 0 0 1vw rgba(155, 188, 15, 0.8);
 }
 
 .arcade-glow {
@@ -26,49 +43,63 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 4px;
+  border-radius: 0.2vw;
   background: linear-gradient(45deg, transparent, rgba(155, 188, 15, 0.2), transparent);
   animation: glow 2s infinite;
 }
 
 .arcade-window {
-  position: absolute;
-  bottom: 28px;
-  right: 0;
-  width: 500px;
-  height: 600px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60vw;
+  height: 70vh;
   background: #0f380f;
-  border: 4px solid #9bbc0f;
-  border-radius: 8px;
-  box-shadow: 0 0 20px rgba(182, 223, 4, 0.5);
+  border: 0.2vw solid #9bbc0f;
+  border-radius: 0.4vw;
+  box-shadow: 0 0 2vw rgba(182, 223, 4, 0.5);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: 9999;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 
 .arcade-header {
   background: #9bbc0f;
-  padding: 8px;
+  padding: 0.5vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 4px solid #0f380f;
+  border-bottom: 0.2vw solid #0f380f;
 }
 
 .arcade-title {
   font-family: 'Press Start 2P', cursive;
   color: #0f380f;
-  font-size: 20px;
+  font-size: 1.2vw;
 }
 
 .close-button {
   background: none;
   border: none;
   color: #0f380f;
-  font-size: 16px;
+  font-size: 1vw;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 0.2vw 0.4vw;
+  border-radius: 0.2vw;
   transition: background-color 0.3s;
 }
 
@@ -79,38 +110,9 @@
 .arcade-screen {
   flex: 1;
   background: #000;
-  padding: 8px;
+  padding: 0.4vw;
   position: relative;
 }
-
-.arcade-button-inner {
-    position: relative;
-    border: 4px solid #9bbc0f;
-    margin-top: -80px;
-    margin-left: 60px;
-    border-radius: 6px;
-    padding: 4px;
-    background: #0f380f;
-    width: 250px;
-    height: 220px;
-    box-shadow: 0 0 8px rgba(155, 188, 15, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  
-  .arcade-button-inner img {
-    display: block;
-    width: 200px;
-    height: 130px;
-    object-fit: cover;
-    background-color: #0f380f;
-    border-radius: 2px;
-  }
-
-  
-  
 
 .game-frame {
   width: 100%;
@@ -121,8 +123,8 @@
 
 .arcade-footer {
   background: #9bbc0f;
-  padding: 8px;
-  border-top: 4px solid #0f380f;
+  padding: 0.4vw;
+  border-top: 0.2vw solid #0f380f;
 }
 
 .arcade-info {
@@ -130,12 +132,12 @@
   justify-content: space-between;
   font-family: 'Press Start 2P', cursive;
   color: #0f380f;
-  font-size: 20px;
+  font-size: 1vw;
 }
 
 .pixel-text {
   font-family: 'Press Start 2P', cursive;
-  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+  text-shadow: 0.2vw 0.2vw 0 rgba(0, 0, 0, 0.3);
 }
 
 @keyframes glow {

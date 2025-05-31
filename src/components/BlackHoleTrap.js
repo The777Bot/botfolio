@@ -35,7 +35,8 @@ export default function BlackHoleTrap() {
           padding: '10px',
           border: '4px double #fff',
           cursor: 'pointer',
-          zIndex: 1000
+          zIndex: 1000,
+          pointerEvents: 'auto'
         }}
       >
         ⚠️ WARNING: DO NOT PRESS
@@ -55,7 +56,8 @@ export default function BlackHoleTrap() {
             background: 'radial-gradient(circle, #000 20%, #111 60%, transparent 90%)',
             borderRadius: '90%',
             transform: 'translate(-50%, -50%)',
-            zIndex: 9999
+            zIndex: 9999,
+            pointerEvents: 'none'
           }}
         />
       )}

@@ -70,7 +70,12 @@
         (playerChoice === 'scissors' && computerChoice === 'paper')
       ) {
         result = 'You win!';
-      } else {
+      } else (
+        (computerChoice === 'rock' && playerChoice === 'scissors') ||
+        (computerChoice === 'paper' && playerChoice === 'rock') ||
+        (computerChoice === 'scissor' && playerChoice === 'paper')
+       )
+       {
         result = 'Computer wins!';
       }
 
