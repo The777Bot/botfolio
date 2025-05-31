@@ -26,7 +26,7 @@ export default function BlackHoleTrap() {
       <button
         onClick={handleWarningClick}
         style={{
-          position: 'fixed',
+          position: 'relative',
           bottom: '120px',
           left: '65px',
           background: '#9b0000',
@@ -35,8 +35,11 @@ export default function BlackHoleTrap() {
           padding: '10px',
           border: '4px double #fff',
           cursor: 'pointer',
-          zIndex: 1000,
-          pointerEvents: 'auto'
+          zIndex: 10000,
+          pointerEvents: 'auto',
+          transform: 'none !important',
+          animation: 'none !important',
+          willChange: ' transform'
         }}
       >
         ⚠️ WARNING: DO NOT PRESS

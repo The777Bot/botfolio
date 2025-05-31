@@ -6,7 +6,7 @@ import LightGreyBox from './components/LightGreyBox';
 import BlackHoleTrap from './components/BlackHoleTrap';
 import ArcadeLauncher from './components/ArcadeLauncher';
 import RunnerCharacter from './components/RunnerCharacter';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function AppContent() {
   const { isDarkMode, toggleDarkMode } = useTheme();
@@ -53,7 +53,125 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="App" style={{ backgroundColor: 'var(--bg-color)', color: 'var(--text-color)' }}>
+    <div className="App" style={{ 
+      backgroundColor: 'var(--bg-color)', 
+      color: 'var(--text-color)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background Effects */}
+      {isDarkMode ? (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at center, #000000 0%, #1a1a1a 100%)',
+          zIndex: 0,
+          pointerEvents: 'none'
+        }}>
+          {/* Stars */}
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              style={{
+                position: 'absolute',
+                width: '2px',
+                height: '2px',
+                background: '#fff',
+                borderRadius: '50%',
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animation: `twinkle ${1 + Math.random() * 2}s infinite alternate`,
+                opacity: Math.random()
+              }}
+            />
+          ))}
+          {/* Shooting Stars */}
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={`shooting-${i}`}
+              style={{
+                position: 'absolute',
+                width: '100px',
+                height: '2px',
+                background: 'linear-gradient(90deg, transparent, #fff)',
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                transform: 'rotate(-45deg)',
+                animation: `shootingStar ${3 + Math.random() * 5}s infinite`,
+                opacity: 0
+              }}
+            />
+          ))}
+        </div>
+      ) : (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}>
+          {/* Sun */}
+          <div style={{
+            position: 'absolute',
+            top: '8%',
+            right: '8%',
+            width: '120px',
+            height: '120px',
+            background: 'radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, transparent 100%)',
+            borderRadius: '50%',
+            boxShadow: '0 0 100px #FFD700, 0 0 150px #FFA500',
+            animation: 'pulse 4s infinite alternate',
+            zIndex: 1
+          }}>
+            {/* Sun Rays */}
+            {[...Array(24)].map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  position: 'absolute',
+                  top: '10%',
+                  left: '10%',
+                  width: '2px',
+                  height: '5px',
+                  background: 'linear-gradient(to top, rgba(255, 215, 0, 0.8), transparent)',
+                  transform: `rotate(${i * 15}deg) translateY(-50%)`,
+                  transformOrigin: 'center',
+                  animation: 'rotate 20s linear infinite',
+                  filter: 'blur(1px)'
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* Sunlight Rays */}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={`ray-${i}`}
+              style={{
+                position: 'absolute',
+                top: '10%',
+                right: '10%',
+                width: '30px',
+                height: '60px',
+                background: 'linear-gradient(to bottom, rgba(255, 215, 0, 0.1), transparent)',
+                transform: `rotate(${i * 45 - 90}deg) translateX(50%)`,
+                transformOrigin: 'top center',
+                filter: 'blur(20px)',
+                animation: 'pulse 4s infinite alternate',
+                zIndex: 0
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Dark Mode Toggle */}
       <div
         onClick={toggleDarkMode}
@@ -174,6 +292,23 @@ function AppContent() {
           </section>
         </div>
 
+        {/* Retro-style Status Bar */}
+        <footer style={{
+          position: 'fixed',
+          bottom: 0,
+          width: '100%',
+          background: 'var(--footer-bg)',
+          color: '#9bbc0f',
+          fontFamily: 'Press Start 2P',
+          fontSize: '0.8vw',
+          padding: '0.5vw',
+          textAlign: 'center',
+          borderTop: '0.2vw double #9bbc0f',
+          zIndex: 10000
+        }}>
+          STATUS: READY 🕹️ | FPS: 60 | PRESS 🐁 TO SHAKE THE MATRIX
+        </footer>
+
         {/* Interactive Elements */}
         <div style={{
           position: 'fixed',
@@ -190,23 +325,6 @@ function AppContent() {
           <BlackHoleTrap />
         </div>
       </div>
-      
-      {/* Retro-style Status Bar */}
-      <footer style={{
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-        background: 'var(--footer-bg)',
-        color: '#9bbc0f',
-        fontFamily: 'Press Start 2P',
-        fontSize: '0.8vw',
-        padding: '0.5vw',
-        textAlign: 'center',
-        borderTop: '0.2vw double #9bbc0f',
-        zIndex: 1001
-      }}>
-        STATUS: READY 🕹️ | FPS: 60 | PRESS 🐁 TO SHAKE THE MATRIX
-      </footer>
     </div>
   );
 }
