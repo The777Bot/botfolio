@@ -26,11 +26,45 @@ body {
   }
   
   .chaos {
-    animation: flash-bg 0.2s infinite alternate;
+    animation: flash-bg 0.5s infinite alternate;
   }
   
   @keyframes flash-bg {
     0% { background-color: #0f380f; }
     100% { background-color: #8bac0f; }
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-5px, -5px); }
+    20%, 40%, 60%, 80% { transform: translate(5px, 5px); }
+  }
+  
+  .shake {
+    animation: shake 0.2s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(10, 10, 10);
+    backface-visibility: show;
+    perspective: 1000px;
+  }
+  
+  /* Add a light effect during shake */
+  .shake::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 100%);
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 3s ease;
+  }
+  
+  .shake::before {
+    opacity: 10;
   }
   

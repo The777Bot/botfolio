@@ -1,27 +1,110 @@
 import './retro.css'; // Import retro style
-
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import WavyBlob from './components/WavyBlob';
 import WigglyWorm from './components/WigglyWorm';
 import LightGreyBox from './components/LightGreyBox';
 import BlackHoleTrap from './components/BlackHoleTrap';
 import ArcadeLauncher from './components/ArcadeLauncher';
 import RunnerCharacter from './components/RunnerCharacter';
+import { useEffect } from 'react';
 
-function App() {
+function AppContent() {
+  const { isDarkMode, toggleDarkMode } = useTheme();
+
+  useEffect(() => {
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    let shakeTimeout;
+
+    const handleMouseMove = (e) => {
+      const currentX = e.clientX;
+      const currentY = e.clientY;
+      
+      // Calculate the distance moved
+      const deltaX = Math.abs(currentX - lastMouseX);
+      const deltaY = Math.abs(currentY - lastMouseY);
+      
+      // If movement is significant, trigger shake effect
+      if (deltaX > 50 || deltaY > 50) {
+        document.body.classList.add('shake');
+        
+        // Clear any existing timeout
+        if (shakeTimeout) {
+          clearTimeout(shakeTimeout);
+        }
+        
+        // Remove shake class after animation
+        shakeTimeout = setTimeout(() => {
+          document.body.classList.remove('shake');
+        }, 500);
+      }
+      
+      lastMouseX = currentX;
+      lastMouseY = currentY;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (shakeTimeout) {
+        clearTimeout(shakeTimeout);
+      }
+    };
+  }, []);
+
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor: 'var(--bg-color)', color: 'var(--text-color)' }}>
+      {/* Dark Mode Toggle */}
+      <div
+        onClick={toggleDarkMode}
+        style={{
+          position: 'relative',
+          top: '50px',
+          right: '-970px',
+          width: '60px',
+          height: '29px',
+          background: isDarkMode ? '#2d2d2d' : '#f2aeb9',
+          borderRadius: '15px',
+          cursor: 'pointer',
+          zIndex: 1002,
+          transition: 'all 0.3s ease',
+          border: '2px solid var(--text-color)',
+          boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)'
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: '2px',
+            left: isDarkMode ? '32px' : '2px',
+            width: '24px',
+            height: '24px',
+            background: isDarkMode ? '#f2aeb9' : '#2d2d2d',
+            borderRadius: '50%',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '12px'
+          }}
+        >
+          {isDarkMode ? '🌞' : '🌙'}
+        </div>
+      </div>
+
       {/* Name Header */}
       <header style={{
         position: 'fixed',
         top: 0,
         width: '100%',
-        background: '#f2aeb9',
-        color: '#000000',
+        background: 'var(--header-bg)',
+        color: 'var(--text-color)',
         fontFamily: 'Press Start 2P',
         fontSize: '1.2vw',
         padding: '1vw',
         textAlign: 'center',
-        borderBottom: '0.5vw double rgb(0, 0, 0)',
+        borderBottom: '0.5vw double var(--text-color)',
         zIndex: 1001
       }}>
         ubadahme@gmail.com
@@ -66,7 +149,7 @@ function App() {
           <section style={{ 
             width: '30%',
             padding: '1vw',
-            color: '#000000',
+            color: 'var(--text-color)',
           }}>
             <h2 className="text-3x1 font-bold mb-4">IN DEVELOPMENT ...🏗️</h2>
           </section>
@@ -112,7 +195,7 @@ function App() {
         position: 'fixed',
         bottom: 0,
         width: '100%',
-        background: '#306230',
+        background: 'var(--footer-bg)',
         color: '#9bbc0f',
         fontFamily: 'Press Start 2P',
         fontSize: '0.8vw',
@@ -124,6 +207,14 @@ function App() {
         STATUS: READY 🕹️ | FPS: 60 | PRESS 🐁 TO SHAKE THE MATRIX
       </footer>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 
