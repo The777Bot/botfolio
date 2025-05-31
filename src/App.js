@@ -60,7 +60,7 @@ function AppContent() {
         style={{
           position: 'relative',
           top: '50px',
-          right: '-970px',
+          right: 'calc(50% - 50px)',
           width: '60px',
           height: '29px',
           background: isDarkMode ? '#2d2d2d' : '#f2aeb9',
@@ -69,7 +69,8 @@ function AppContent() {
           zIndex: 1002,
           transition: 'all 0.3s ease',
           border: '2px solid var(--text-color)',
-          boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)'
+          boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)',
+          margin: '0 auto'
         }}
       >
         <div
