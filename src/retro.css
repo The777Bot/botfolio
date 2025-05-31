@@ -78,6 +78,38 @@ body {
     animation: none !important;
   }
   
+  @keyframes twinkle {
+    0% { 
+      opacity: 0.2;
+      transform: scale(0.8);
+    }
+    50% { 
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% { 
+      opacity: 0.2;
+      transform: scale(0.8);
+    }
+  }
+  
+  @keyframes shootingStar {
+    0% {
+      transform: translateX(0) translateY(0) rotate(50deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(1000px) translateY(1000px) rotate(45deg);
+      opacity: 0;
+    }
+  }
+  
   @keyframes pulse {
     0% { 
       transform: scale(1);
@@ -92,21 +124,5 @@ body {
   @keyframes rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
-  }
-  
-  @keyframes twinkle {
-    0% { opacity: 0.2; }
-    100% { opacity: 1; }
-  }
-  
-  @keyframes shootingStar {
-    0% {
-      transform: translateX(0) translateY(0) rotate(50deg);
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(1000px) translateY(1000px) rotate(45deg);
-      opacity: 1;
-    }
   }
   

@@ -26,7 +26,10 @@ function AppContent() {
       
       // If movement is significant, trigger shake effect
       if (deltaX > 50 || deltaY > 50) {
-        document.body.classList.add('shake');
+        const contentArea = document.querySelector('.content-area');
+        if (contentArea) {
+          contentArea.classList.add('shake');
+        }
         
         // Clear any existing timeout
         if (shakeTimeout) {
@@ -35,7 +38,9 @@ function AppContent() {
         
         // Remove shake class after animation
         shakeTimeout = setTimeout(() => {
-          document.body.classList.remove('shake');
+          if (contentArea) {
+            contentArea.classList.remove('shake');
+          }
         }, 500);
       }
       
@@ -57,147 +62,57 @@ function AppContent() {
       backgroundColor: 'var(--bg-color)', 
       color: 'var(--text-color)',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      minHeight: '100vh'
     }}>
-      {/* Background Effects */}
-      {isDarkMode ? (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'radial-gradient(circle at center, #000000 0%, #1a1a1a 100%)',
-          zIndex: 0,
-          pointerEvents: 'none'
-        }}>
-          {/* Stars */}
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                width: '2px',
-                height: '2px',
-                background: '#fff',
-                borderRadius: '50%',
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animation: `twinkle ${1 + Math.random() * 2}s infinite alternate`,
-                opacity: Math.random()
-              }}
-            />
-          ))}
-          {/* Shooting Stars */}
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={`shooting-${i}`}
-              style={{
-                position: 'absolute',
-                width: '100px',
-                height: '2px',
-                background: 'linear-gradient(90deg, transparent, #fff)',
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                transform: 'rotate(-45deg)',
-                animation: `shootingStar ${3 + Math.random() * 5}s infinite`,
-                opacity: 0
-              }}
-            />
-          ))}
-        </div>
-      ) : (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}>
-          {/* Sun */}
-          <div style={{
-            position: 'absolute',
-            top: '8%',
-            right: '8%',
-            width: '120px',
-            height: '120px',
-            background: 'radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, transparent 100%)',
-            borderRadius: '50%',
-            boxShadow: '0 0 100px #FFD700, 0 0 150px #FFA500',
-            animation: 'pulse 4s infinite alternate',
-            zIndex: 1
-          }}>
-            {/* Sun Rays */}
-            {[...Array(24)].map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  position: 'absolute',
-                  top: '10%',
-                  left: '10%',
-                  width: '2px',
-                  height: '5px',
-                  background: 'linear-gradient(to top, rgba(255, 215, 0, 0.8), transparent)',
-                  transform: `rotate(${i * 15}deg) translateY(-50%)`,
-                  transformOrigin: 'center',
-                  animation: 'rotate 20s linear infinite',
-                  filter: 'blur(1px)'
-                }}
-              />
-            ))}
-          </div>
-          
-          {/* Sunlight Rays */}
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`ray-${i}`}
-              style={{
-                position: 'absolute',
-                top: '10%',
-                right: '10%',
-                width: '30px',
-                height: '60px',
-                background: 'linear-gradient(to bottom, rgba(255, 215, 0, 0.1), transparent)',
-                transform: `rotate(${i * 45 - 90}deg) translateX(50%)`,
-                transformOrigin: 'top center',
-                filter: 'blur(20px)',
-                animation: 'pulse 4s infinite alternate',
-                zIndex: 0
-              }}
-            />
-          ))}
-        </div>
-      )}
+      {/* Fixed Header */}
+      <header style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        background: 'var(--header-bg)',
+        color: 'var(--text-color)',
+        fontFamily: 'Press Start 2P',
+        fontSize: 'clamp(12px, 1.2vw, 24px)',
+        padding: '1vh',
+        textAlign: 'center',
+        borderBottom: '0.5vh double var(--text-color)',
+        zIndex: 1001,
+        transform: 'translateZ(0)',
+        willChange: 'transform'
+      }}>
+        ubadahme@gmail.com
+      </header>
 
-      {/* Dark Mode Toggle */}
+      {/* Fixed Dark Mode Toggle */}
       <div
         onClick={toggleDarkMode}
         style={{
-          position: 'relative',
-          top: '50px',
-          right: 'calc(50% - 50px)',
-          width: '60px',
-          height: '29px',
+          position: 'fixed',
+          top: '8vh',
+          right: '94vw',
+          width: 'clamp(40px, 5vw, 50px)',
+          height: 'clamp(30px, 2vh, 40px)',
           background: isDarkMode ? '#2d2d2d' : '#f2aeb9',
           borderRadius: '15px',
           cursor: 'pointer',
-          zIndex: 1002,
+          zIndex: 10000,
           transition: 'all 0.3s ease',
           border: '2px solid var(--text-color)',
           boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)',
-          margin: '0 auto'
+          transform: 'translateZ(0)',
+          willChange: 'transform'
         }}
       >
         <div
           style={{
             position: 'absolute',
             top: '2px',
-            left: isDarkMode ? '32px' : '2px',
-            width: '24px',
-            height: '24px',
+            
+            left: isDarkMode ? 'calc(100% - 26px)' : '2px',
+            width: 'clamp(16px, 1.5vw, 24px)',
+            height: 'clamp(16px, 1.5vw, 24px)',
             background: isDarkMode ? '#f2aeb9' : '#2d2d2d',
             borderRadius: '50%',
             transition: 'all 0.3s ease',
@@ -205,53 +120,150 @@ function AppContent() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '12px'
+            fontSize: 'clamp(10px, 1vw, 12px)'
           }}
         >
           {isDarkMode ? '🌞' : '🌙'}
         </div>
       </div>
 
-      {/* Name Header */}
-      <header style={{
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        background: 'var(--header-bg)',
-        color: 'var(--text-color)',
-        fontFamily: 'Press Start 2P',
-        fontSize: '1.2vw',
-        padding: '1vw',
-        textAlign: 'center',
-        borderBottom: '0.5vw double var(--text-color)',
-        zIndex: 1001
-      }}>
-        ubadahme@gmail.com
-      </header>
-
-      {/* Main Content Container */}
-      <div className="main-content" style={{
+      {/* Content Area - This will shake */}
+      <div className="content-area" style={{
         position: 'relative',
         minHeight: '100vh',
-        paddingTop: '5vw',
+        paddingTop: 'calc(5vh + 2vw)',
         paddingLeft: '2vw',
         paddingRight: '2vw',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
       }}>
+        {/* Background Effects */}
+        {isDarkMode ? (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'radial-gradient(circle at center, #000000 0%, #1a1a1a 100%)',
+            zIndex: 0,
+            pointerEvents: 'none'
+          }}>
+            {/* Stars */}
+            {[...Array(100)].map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  position: 'absolute',
+                  width: `${Math.random() * 2 + 1}px`,
+                  height: `${Math.random() * 2 + 1}px`,
+                  background: '#fff',
+                  borderRadius: '50%',
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  animation: `twinkle ${1 + Math.random() * 3}s infinite alternate`,
+                  opacity: Math.random() * 0.8 + 0.2,
+                  boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)'
+                }}
+              />
+            ))}
+            {/* Shooting Stars */}
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={`shooting-${i}`}
+                style={{
+                  position: 'absolute',
+                  width: '150px',
+                  height: '2px',
+                  background: 'linear-gradient(90deg, transparent, #fff)',
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  transform: 'rotate(-45deg)',
+                  animation: `shootingStar ${3 + Math.random() * 5}s infinite`,
+                  opacity: 0,
+                  boxShadow: '0 0 8px rgba(255, 255, 255, 0.8)'
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%)',
+            zIndex: 0,
+            pointerEvents: 'none',
+          }}>
+            {/* Sun */}
+            <div style={{
+              position: 'absolute',
+              top: '8%',
+              right: '8%',
+              width: '120px',
+              height: '120px',
+              background: 'radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, transparent 100%)',
+              borderRadius: '50%',
+              boxShadow: '0 0 100px #FFD700, 0 0 150px #FFA500',
+              animation: 'pulse 4s infinite alternate',
+              zIndex: 1
+            }}>
+              {/* Sun Rays */}
+              {[...Array(24)].map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: 'absolute',
+                    top: '10%',
+                    left: '10%',
+                    width: '2px',
+                    height: '5px',
+                    background: 'linear-gradient(to top, rgba(255, 215, 0, 0.8), transparent)',
+                    transform: `rotate(${i * 15}deg) translateY(-50%)`,
+                    transformOrigin: 'center',
+                    animation: 'rotate 20s linear infinite',
+                    filter: 'blur(1px)'
+                  }}
+                />
+              ))}
+            </div>
+            
+            {/* Sunlight Rays */}
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`ray-${i}`}
+                style={{
+                  position: 'absolute',
+                  top: '10%',
+                  right: '10%',
+                  width: '30px',
+                  height: '60px',
+                  background: 'linear-gradient(to bottom, rgba(255, 215, 0, 0.1), transparent)',
+                  transform: `rotate(${i * 45 - 90}deg) translateX(50%)`,
+                  transformOrigin: 'top center',
+                  filter: 'blur(20px)',
+                  animation: 'pulse 4s infinite alternate',
+                  zIndex: 0
+                }}
+              />
+            ))}
+          </div>
+        )}
+
         {/* Welcome Title */}
         <h1 style={{ 
           textAlign: 'center', 
-          marginTop: '2vw',
-          marginBottom: '4vw',
-          fontSize: '2.8vw',
-          zIndex: 1,
+          marginTop: '2vh',
+          marginBottom: '4vh',
+          fontSize: 'clamp(20px, 2.8vw, 40px)',
           position: 'relative'
         }}>
           <span style={{ color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
           <br />
-          <small style={{ fontSize: '1vw', color: '#ccc' }}>
+          <small style={{ fontSize: 'clamp(12px, 1vw, 16px)', color: '#ccc' }}>
             Shake the mouse if you're curious...
           </small>
         </h1>
@@ -261,8 +273,7 @@ function AppContent() {
           display: 'flex',
           justifyContent: 'space-between',
           width: '100%',
-          position: 'relative',
-          zIndex: 1
+          position: 'relative'
         }}>
           {/* Left Section */}
           <section style={{ 
@@ -292,23 +303,6 @@ function AppContent() {
           </section>
         </div>
 
-        {/* Retro-style Status Bar */}
-        <footer style={{
-          position: 'fixed',
-          bottom: 0,
-          width: '100%',
-          background: 'var(--footer-bg)',
-          color: '#9bbc0f',
-          fontFamily: 'Press Start 2P',
-          fontSize: '0.8vw',
-          padding: '0.5vw',
-          textAlign: 'center',
-          borderTop: '0.2vw double #9bbc0f',
-          zIndex: 10000
-        }}>
-          STATUS: READY 🕹️ | FPS: 60 | PRESS 🐁 TO SHAKE THE MATRIX
-        </footer>
-
         {/* Interactive Elements */}
         <div style={{
           position: 'fixed',
@@ -325,6 +319,26 @@ function AppContent() {
           <BlackHoleTrap />
         </div>
       </div>
+
+      {/* Fixed Footer */}
+      <footer style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: 'var(--footer-bg)',
+        color: '#9bbc0f',
+        fontFamily: 'Press Start 2P',
+        fontSize: 'clamp(10px, 0.8vw, 16px)',
+        padding: '0.5vh',
+        textAlign: 'center',
+        borderTop: '0.2vh double #9bbc0f',
+        zIndex: 10000,
+        transform: 'translateZ(0)',
+        willChange: 'transform'
+      }}>
+        STATUS: READY 🕹️ | FPS: 60 | PRESS 🐁 TO SHAKE THE MATRIX
+      </footer>
     </div>
   );
 }
