@@ -44,21 +44,28 @@
       margin-top: 20px;
       font-size: 1.2rem;
       color: #0f0;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <h1>✊ ✋ ✌️ Stone Paper Scissors</h1>
   <div class="options">
-    <button onclick="play('rock ✊')">Stone</button>
-    <button onclick="play('paper ✋')">Paper</button>
-    <button onclick="play('scissors ✌️')">Scissors</button>
+    <button onclick="play('rock')">Stone ✊</button>
+    <button onclick="play('paper')">Paper ✋</button>
+    <button onclick="play('scissors')">Scissors ✌️</button>
   </div>
   <div id="status" class="result"></div>
 
   <script>
     function play(playerChoice) {
       const choices = ['rock', 'paper', 'scissors'];
+      const emojiMap = {
+        rock: '✊',
+        paper: '✋',
+        scissors: '✌️'
+      };
+
       const computerChoice = choices[Math.floor(Math.random() * 3)];
 
       let result = '';
@@ -70,18 +77,13 @@
         (playerChoice === 'scissors' && computerChoice === 'paper')
       ) {
         result = 'You win!';
-      } else (
-        (computerChoice === 'rock' && playerChoice === 'scissors') ||
-        (computerChoice === 'paper' && playerChoice === 'rock') ||
-        (computerChoice === 'scissor' && playerChoice === 'paper')
-       )
-       {
+      } else {
         result = 'Computer wins!';
       }
 
       document.getElementById('status').innerHTML = `
-        You chose <strong>${playerChoice}</strong>, 
-        Computer chose <strong>${computerChoice}</strong>.<br/>
+        You chose <strong>${playerChoice} ${emojiMap[playerChoice]}</strong><br/>
+        Computer chose <strong>${computerChoice} ${emojiMap[computerChoice]}</strong><br/><br/>
         <span>${result}</span>
       `;
     }

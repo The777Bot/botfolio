@@ -84,27 +84,46 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 0.2vw solid #0f380f;
+  position: relative;
 }
 
 .arcade-title {
   font-family: 'Press Start 2P', cursive;
   color: #0f380f;
   font-size: 1.2vw;
+  margin-left: 1vw;
+}
+
+.arcade-controls {
+  position: absolute;
+  right: 0.5vw;
+  top: 10%;
+  transform: translateY(-50%);
 }
 
 .close-button {
-  background: none;
-  border: none;
-  color: #0f380f;
-  font-size: 1vw;
+  background: #9b0000;
+  border: 1.5px solid #fff;
+  color: #fff;
+  font-size: 1.2vw;
   cursor: pointer;
-  padding: 0.2vw 0.4vw;
-  border-radius: 0.2vw;
-  transition: background-color 0.3s;
+  padding: 0.4vw 0.8vw;
+  border-radius: 0.4vw;
+  transition: all 0.3s ease;
+  font-family: 'Press Start 2P', cursive;
+  box-shadow: 0 0 10px rgba(155, 0, 0, 0.5);
+  position: relative;
+  right: 0;
 }
 
 .close-button:hover {
-  background: rgba(15, 56, 15, 0.2);
+  background: #ff0000;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+}
+
+.close-button:active {
+  transform: scale(0.95);
 }
 
 .arcade-screen {

@@ -6,15 +6,24 @@ import LightGreyBox from './components/LightGreyBox';
 import BlackHoleTrap from './components/BlackHoleTrap';
 import ArcadeLauncher from './components/ArcadeLauncher';
 import RunnerCharacter from './components/RunnerCharacter';
-import { useEffect, useState } from 'react';
+import CycloneEffect from './components/CycloneEffect';
+import { useEffect, useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 function AppContent() {
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const [isCycloneActive, setIsCycloneActive] = useState(false);
+  const [isRearranged, setIsRearranged] = useState(false);
+  const cooldownRef = useRef(false);
+  const timeoutsRef = useRef({
+    cyclone: null,
+    rearrange: null,
+    cooldown: null
+  });
 
   useEffect(() => {
     let lastMouseX = 0;
     let lastMouseY = 0;
-    let shakeTimeout;
 
     const handleMouseMove = (e) => {
       const currentX = e.clientX;
@@ -24,24 +33,32 @@ function AppContent() {
       const deltaX = Math.abs(currentX - lastMouseX);
       const deltaY = Math.abs(currentY - lastMouseY);
       
-      // If movement is significant, trigger shake effect
-      if (deltaX > 50 || deltaY > 50) {
-        const contentArea = document.querySelector('.content-area');
-        if (contentArea) {
-          contentArea.classList.add('shake');
-        }
+      // Only trigger if not on cooldown
+      if (!cooldownRef.current && (deltaX > 800 || deltaY > 800)) {
+        // Clear any existing timeouts
+        Object.values(timeoutsRef.current).forEach(timeout => {
+          if (timeout) clearTimeout(timeout);
+        });
+
+        // Start cyclone
+        setIsCycloneActive(true);
+        setIsRearranged(true);
         
-        // Clear any existing timeout
-        if (shakeTimeout) {
-          clearTimeout(shakeTimeout);
-        }
-        
-        // Remove shake class after animation
-        shakeTimeout = setTimeout(() => {
-          if (contentArea) {
-            contentArea.classList.remove('shake');
-          }
-        }, 500);
+        // Remove cyclone effect after 1 second
+        timeoutsRef.current.cyclone = setTimeout(() => {
+          setIsCycloneActive(false);
+          
+          // Keep the rearrangement active for longer
+          timeoutsRef.current.rearrange = setTimeout(() => {
+            setIsRearranged(false);
+          }, 3000); // Keep rearranged state for 3 seconds
+          
+          // Start cooldown period
+          cooldownRef.current = true;
+          timeoutsRef.current.cooldown = setTimeout(() => {
+            cooldownRef.current = false;
+          }, 15000); // 15 seconds cooldown
+        }, 1000);
       }
       
       lastMouseX = currentX;
@@ -51,9 +68,10 @@ function AppContent() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      if (shakeTimeout) {
-        clearTimeout(shakeTimeout);
-      }
+      // Clear all timeouts on cleanup
+      Object.values(timeoutsRef.current).forEach(timeout => {
+        if (timeout) clearTimeout(timeout);
+      });
     };
   }, []);
 
@@ -66,24 +84,32 @@ function AppContent() {
       minHeight: '100vh'
     }}>
       {/* Fixed Header */}
-      <header style={{
+      <motion.header
+        animate={{
+          x: isRearranged ? Math.random() * 100 - 50 : 0,
+          y: isRearranged ? Math.random() * 100 - 50 : 0,
+          rotate: isRearranged ? Math.random() * 20 - 10 : 0
+        }}
+        transition={{ duration: 0.5 }}
+        style={{
         position: 'fixed',
         top: 0,
-        left: 0,
-        right: 0,
-        background: 'var(--header-bg)',
-        color: 'var(--text-color)',
+          left: 0,
+          right: 0,
+          background: 'var(--header-bg)',
+          color: 'var(--text-color)',
         fontFamily: 'Press Start 2P',
-        fontSize: 'clamp(12px, 1.2vw, 24px)',
-        padding: '1vh',
+          fontSize: 'clamp(12px, 1.2vw, 24px)',
+          padding: '1vh',
         textAlign: 'center',
-        borderBottom: '0.5vh double var(--text-color)',
-        zIndex: 1001,
-        transform: 'translateZ(0)',
-        willChange: 'transform'
-      }}>
+          borderBottom: '0.5vh double var(--text-color)',
+          zIndex: 1001,
+          transform: 'translateZ(0)',
+          willChange: 'transform'
+        }}
+      >
         ubadahme@gmail.com
-      </header>
+      </motion.header>
 
       {/* Fixed Dark Mode Toggle */}
       <div
@@ -106,7 +132,7 @@ function AppContent() {
         }}
       >
         <div
-          style={{
+          style={{ 
             position: 'absolute',
             top: '2px',
             
@@ -250,7 +276,7 @@ function AppContent() {
                 }}
               />
             ))}
-          </div>
+    </div>
         )}
 
         {/* Welcome Title */}
@@ -262,46 +288,82 @@ function AppContent() {
           position: 'relative'
         }}>
           <span style={{ color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
-          <br />
+        <br />
           <small style={{ fontSize: 'clamp(12px, 1vw, 16px)', color: '#ccc' }}>
-            Shake the mouse if you're curious...
-          </small>
-        </h1>
-
+          Shake the mouse if you're curious...
+        </small>
+      </h1>
+      
         {/* Content Sections */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-          position: 'relative'
-        }}>
-          {/* Left Section */}
-          <section style={{ 
-            width: '30%',
-            padding: '1vw',
-            color: 'var(--text-color)',
-          }}>
-            <h2 className="text-3x1 font-bold mb-4">IN DEVELOPMENT ...🏗️</h2>
-          </section>
-
-          {/* Center Section */}
-          <section style={{
-            width: '40%',
+        <motion.div
+          animate={{
+            x: isRearranged ? Math.random() * 200 - 100 : 0,
+            y: isRearranged ? Math.random() * 200 - 100 : 0,
+            rotate: isRearranged ? Math.random() * 30 - 15 : 0
+          }}
+          transition={{ duration: 0.5 }}
+          style={{
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'flex-start'
-          }}>
+            justifyContent: 'space-between',
+            width: '100%',
+            position: 'relative',
+            gap: '2vw',
+            padding: '0 2vw'
+          }}
+        >
+          {/* Left Section - GitHub Window */}
+          <motion.section
+            animate={{
+              x: isRearranged ? Math.random() * 150 - 75 : 0,
+              y: isRearranged ? Math.random() * 150 - 75 : 0,
+              rotate: isRearranged ? Math.random() * 25 - 12.5 : 0
+            }}
+            transition={{ duration: 0.5 }}
+            style={{ 
+              width: '20%',
+              padding: '1vw',
+              color: 'var(--text-color)',
+              position: 'relative'
+            }}
+          >
             <LightGreyBox />
-          </section>
+          </motion.section>
 
-          {/* Right Section */}
-          <section style={{
-            width: '30%',
-            position: 'relative'
-          }}>
+          {/* Center Section - Main Content */}
+          <motion.section
+            animate={{
+              x: isRearranged ? Math.random() * 150 - 75 : 0,
+              y: isRearranged ? Math.random() * 150 - 75 : 0,
+              rotate: isRearranged ? Math.random() * 25 - 12.5 : 0
+            }}
+            transition={{ duration: 0.5 }}
+            style={{
+              width: '60%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start'
+            }}
+          >
+            <h2 className="text-3x1 font-bold mb-4">IN DEVELOPMENT ...🏗️</h2>
+          </motion.section>
+
+          {/* Right Section - Arcade Game */}
+          <motion.section
+            animate={{
+              x: isRearranged ? Math.random() * 150 - 75 : 0,
+              y: isRearranged ? Math.random() * 150 - 75 : 0,
+              rotate: isRearranged ? Math.random() * 25 - 12.5 : 0
+            }}
+            transition={{ duration: 2 }}
+            style={{ 
+              width: '20%',
+              padding: '1vw',
+              color: 'var(--text-color)',
+            }}
+          >
             <ArcadeLauncher />
-          </section>
-        </div>
+          </motion.section>
+        </motion.div>
 
         {/* Interactive Elements */}
         <div style={{
@@ -321,24 +383,35 @@ function AppContent() {
       </div>
 
       {/* Fixed Footer */}
-      <footer style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        background: 'var(--footer-bg)',
-        color: '#9bbc0f',
-        fontFamily: 'Press Start 2P',
-        fontSize: 'clamp(10px, 0.8vw, 16px)',
-        padding: '0.5vh',
-        textAlign: 'center',
-        borderTop: '0.2vh double #9bbc0f',
-        zIndex: 10000,
-        transform: 'translateZ(0)',
-        willChange: 'transform'
-      }}>
-        STATUS: READY 🕹️ | FPS: 60 | PRESS 🐁 TO SHAKE THE MATRIX
-      </footer>
+      <motion.footer
+        animate={{
+          x: isRearranged ? Math.random() * 100 - 50 : 0,
+          y: isRearranged ? Math.random() * 100 - 50 : 0,
+          rotate: isRearranged ? Math.random() * 20 - 10 : 0
+        }}
+        transition={{ duration: 5 }}
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: 'var(--footer-bg)',
+          color: '#9bbc0f',
+          fontFamily: 'Press Start 2P',
+          fontSize: 'clamp(10px, 0.8vw, 16px)',
+          padding: '0.5vh',
+          textAlign: 'center',
+          borderTop: '0.2vh double #9bbc0f',
+          zIndex: 10000,
+          transform: 'translateZ(0)',
+          willChange: 'transform'
+        }}
+      >
+        STATUS: READY 🕹️ | FPS: 60 | SHAKE TO TRIGGER CYCLONE 🌪️
+      </motion.footer>
+
+      {/* Cyclone Effect */}
+      <CycloneEffect isActive={isCycloneActive} />
     </div>
   );
 }

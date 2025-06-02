@@ -39,8 +39,9 @@ const ArcadeLauncher = () => {
               <button 
                 onClick={toggleGameWindow} 
                 className="close-button"
+                title="Close Arcade"
               >
-                ✖
+                X
               </button>
             </div>
           </div>
