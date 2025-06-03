@@ -7,19 +7,34 @@ import BlackHoleTrap from './components/BlackHoleTrap';
 import ArcadeLauncher from './components/ArcadeLauncher';
 import RunnerCharacter from './components/RunnerCharacter';
 import CycloneEffect from './components/CycloneEffect';
+import MonsterEffect from './components/MonsterEffect';
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import NotFound from './pages/NotFound';
 
 function AppContent() {
   const { isDarkMode, toggleDarkMode } = useTheme();
   const [isCycloneActive, setIsCycloneActive] = useState(false);
   const [isRearranged, setIsRearranged] = useState(false);
+  const [isMonsterActive, setIsMonsterActive] = useState(false);
   const cooldownRef = useRef(false);
   const timeoutsRef = useRef({
     cyclone: null,
     rearrange: null,
     cooldown: null
   });
+  const navigate = useNavigate();
+
+  const handleMonsterComplete = () => {
+    setIsMonsterActive(false);
+    // Restore UI elements
+    const elements = document.querySelectorAll('.App > *:not(.monster-effect)');
+    elements.forEach(element => {
+      element.style.opacity = '1';
+      element.style.transform = 'scale(1)';
+    });
+  };
 
   useEffect(() => {
     let lastMouseX = 0;
@@ -92,16 +107,16 @@ function AppContent() {
         }}
         transition={{ duration: 0.5 }}
         style={{
-        position: 'fixed',
-        top: 0,
+          position: 'fixed',
+          top: 0,
           left: 0,
           right: 0,
           background: 'var(--header-bg)',
           color: 'var(--text-color)',
-        fontFamily: 'Press Start 2P',
+          fontFamily: 'Press Start 2P',
           fontSize: 'clamp(12px, 1.2vw, 24px)',
           padding: '1vh',
-        textAlign: 'center',
+          textAlign: 'center',
           borderBottom: '0.5vh double var(--text-color)',
           zIndex: 1001,
           transform: 'translateZ(0)',
@@ -110,6 +125,34 @@ function AppContent() {
       >
         ubadahme@gmail.com
       </motion.header>
+
+      {/* Monster Button */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => setIsMonsterActive(true)}
+        style={{
+          position: 'fixed',
+          bottom: '50px',
+          right: '20px',
+          background: '#9b0000',
+          color: '#fff',
+          border: '2px solid #fff',
+          padding: '10px 20px',
+          borderRadius: '5px',
+          fontFamily: 'Press Start 2P',
+          fontSize: 'clamp(10px, 0.8vw, 16px)',
+          cursor: 'pointer',
+          zIndex: 10000,
+          boxShadow: '0 0 10px rgba(155, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}
+      >
+        <span>⚠️</span>
+        <span>SUMMON MONSTER</span>
+      </motion.button>
 
       {/* Fixed Dark Mode Toggle */}
       <div
@@ -135,7 +178,6 @@ function AppContent() {
           style={{ 
             position: 'absolute',
             top: '2px',
-            
             left: isDarkMode ? 'calc(100% - 26px)' : '2px',
             width: 'clamp(16px, 1.5vw, 24px)',
             height: 'clamp(16px, 1.5vw, 24px)',
@@ -152,6 +194,9 @@ function AppContent() {
           {isDarkMode ? '🌞' : '🌙'}
         </div>
       </div>
+
+      {/* Monster Effect */}
+      <MonsterEffect isActive={isMonsterActive} onComplete={handleMonsterComplete} />
 
       {/* Content Area - This will shake */}
       <div className="content-area" style={{
@@ -276,7 +321,7 @@ function AppContent() {
                 }}
               />
             ))}
-    </div>
+          </div>
         )}
 
         {/* Welcome Title */}
@@ -288,11 +333,11 @@ function AppContent() {
           position: 'relative'
         }}>
           <span style={{ color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
-        <br />
+          <br />
           <small style={{ fontSize: 'clamp(12px, 1vw, 16px)', color: '#ccc' }}>
-          Shake the mouse if you're curious...
-        </small>
-      </h1>
+            Shake the mouse if you're curious...
+          </small>
+        </h1>
       
         {/* Content Sections */}
         <motion.div
@@ -418,9 +463,15 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <Router>
+      <ThemeProvider>
+        <Routes>
+          <Route path="/" element={<AppContent />} />
+          <Route path="/404" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </ThemeProvider>
+    </Router>
   );
 }
 

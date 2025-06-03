@@ -1,0 +1,195 @@
+@keyframes monsterAppear {
+  0% {
+    transform: translateY(100%) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(50%) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes chomp {
+  0% { transform: translateX(-50%) scaleY(1); }
+  50% { transform: translateX(-50%) scaleY(0.8); }
+  100% { transform: translateX(-50%) scaleY(1); }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.monster-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.monster {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  animation: monsterAppear 1s ease-out forwards, chomp 0.5s infinite;
+}
+
+.monster::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #ff0000, #990000);
+  border-radius: 50% 50% 0 0;
+  box-shadow: 
+    0 0 20px #ff0000,
+    0 0 40px rgba(255, 0, 0, 0.5);
+}
+
+.monster::after {
+  content: '';
+  position: absolute;
+  bottom: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 50%;
+  background: #000;
+  border-radius: 50%;
+  box-shadow: 
+    0 0 0 15px #ff0000,
+    0 0 0 30px #000,
+    0 0 0 45px #ff0000;
+}
+
+.monster-eye {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50%;
+  top: 35%;
+  animation: blink 2s infinite;
+  box-shadow: 0 0 10px #fff;
+}
+
+.monster-eye.left {
+  left: 25%;
+}
+
+.monster-eye.right {
+  right: 25%;
+}
+
+.monster-eye::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #000;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 5px #000;
+}
+
+@keyframes blink {
+  0%, 45%, 55%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+}
+
+.glitch-text {
+  animation: glitch 0.3s infinite;
+  color: #ff0000;
+  text-shadow: 2px 2px #00ff00;
+}
+
+.eaten-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: #000;
+  transition: height 0.5s ease-in-out;
+}
+
+.error-message {
+  position: relative;
+  font-family: 'Press Start 2P', monospace;
+  color: #ff0000;
+  text-shadow: 2px 2px #000;
+  animation: glitch 0.3s infinite;
+}
+
+.error-message::before,
+.error-message::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.error-message::before {
+  left: 2px;
+  text-shadow: -2px 0 #00ff00;
+  animation: glitch 0.3s infinite;
+}
+
+.error-message::after {
+  left: -2px;
+  text-shadow: 2px 0 #ff0000;
+  animation: glitch 0.3s infinite;
+}
+
+/* Add monster mouth */
+.monster-mouth {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 50px;
+  background: #000;
+  border-radius: 0 0 50% 50%;
+  animation: chomp 0.5s infinite;
+}
+
+/* Add monster teeth */
+.monster-teeth {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.monster-tooth {
+  width: 10px;
+  height: 20px;
+  background: #fff;
+  border-radius: 0 0 5px 5px;
+} 
