@@ -118,6 +118,8 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     padding: 15px 25px !important;
+    top: 84vh !important;
+    right: 1vw !important;
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease;
