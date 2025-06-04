@@ -41,7 +41,7 @@ const MonsterEffect = ({ isActive, onComplete }) => {
           
           // Create a highlight effect around the current target
           element.style.transition = 'all 0.5s ease-in-out';
-          element.style.boxShadow = '0 0 20px rgba(155, 0, 0, 0.5)';
+          element.style.boxShadow = '0 0 20px rgba(255, 225, 53, 0.5)';
           
           // Hide the element with a bite effect
           setTimeout(() => {
@@ -80,6 +80,20 @@ const MonsterEffect = ({ isActive, onComplete }) => {
     }
   }, [isActive, onComplete]);
 
+  const handleMouseEnter = () => {
+    const element = document.querySelector('.monster-effect');
+    if (element) {
+      element.style.boxShadow = '0 0 20px rgba(255, 225, 53, 0.5)';
+    }
+  };
+
+  const handleMouseLeave = () => {
+    const element = document.querySelector('.monster-effect');
+    if (element) {
+      element.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.3)';
+    }
+  };
+
   return (
     <AnimatePresence>
       {isActive && (
@@ -99,14 +113,21 @@ const MonsterEffect = ({ isActive, onComplete }) => {
         >
           <div className={`monster ${isEating ? 'eating' : ''}`}>
             <div className="monster-body">
+              <div className="monster-horns"></div> {/* NEW */}
               <div className="monster-eyes">
                 <div className="eye left"></div>
                 <div className="eye right"></div>
               </div>
               <div className="monster-mouth"></div>
               <div className="monster-teeth"></div>
+              <div className="monster-wings"></div> {/* NEW */}
+              <div className="monster-tail"></div> {/* NEW */}
             </div>
           </div>
+  
+          {/* Fire Effect */}
+          <div className="monster-fire"></div> {/* NEW */}
+  
           {currentTarget && (
             <div className="target-indicator">
               <div className="target-ring"></div>
@@ -116,6 +137,6 @@ const MonsterEffect = ({ isActive, onComplete }) => {
       )}
     </AnimatePresence>
   );
-};
+}  
 
 export default MonsterEffect; 

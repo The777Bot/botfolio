@@ -107,16 +107,16 @@ function AppContent() {
         }}
         transition={{ duration: 0.5 }}
         style={{
-          position: 'fixed',
-          top: 0,
+        position: 'fixed',
+        top: 0,
           left: 0,
           right: 0,
           background: 'var(--header-bg)',
           color: 'var(--text-color)',
-          fontFamily: 'Press Start 2P',
+        fontFamily: 'Press Start 2P',
           fontSize: 'clamp(12px, 1.2vw, 24px)',
           padding: '1vh',
-          textAlign: 'center',
+        textAlign: 'center',
           borderBottom: '0.5vh double var(--text-color)',
           zIndex: 1001,
           transform: 'translateZ(0)',
@@ -321,7 +321,7 @@ function AppContent() {
                 }}
               />
             ))}
-          </div>
+    </div>
         )}
 
         {/* Welcome Title */}
@@ -333,11 +333,11 @@ function AppContent() {
           position: 'relative'
         }}>
           <span style={{ color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
-          <br />
+        <br />
           <small style={{ fontSize: 'clamp(12px, 1vw, 16px)', color: '#ccc' }}>
-            Shake the mouse if you're curious...
-          </small>
-        </h1>
+          Shake the mouse if you're curious...
+        </small>
+      </h1>
       
         {/* Content Sections */}
         <motion.div
@@ -436,16 +436,16 @@ function AppContent() {
         }}
         transition={{ duration: 5 }}
         style={{
-          position: 'fixed',
-          bottom: 0,
+        position: 'fixed',
+        bottom: 0,
           left: 0,
           right: 0,
           background: 'var(--footer-bg)',
-          color: '#9bbc0f',
-          fontFamily: 'Press Start 2P',
+        color: '#9bbc0f',
+        fontFamily: 'Press Start 2P',
           fontSize: 'clamp(10px, 0.8vw, 16px)',
           padding: '0.5vh',
-          textAlign: 'center',
+        textAlign: 'center',
           borderTop: '0.2vh double #9bbc0f',
           zIndex: 10000,
           transform: 'translateZ(0)',

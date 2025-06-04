@@ -2,7 +2,7 @@
     width: 200px;
     height: 200px;
     transition: all 0.3s ease-in-out;
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 4px 10px rgba(255, 225, 53, 0.3));
   }
   
   .monster {
@@ -19,187 +19,39 @@
   .monster-body {
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 40% 30%, #2c3e50, #111);
-    border-radius: 50% 50% 40% 40% / 45% 45% 60% 60%;
+    background: #FFE135;
+    border-radius: 50%;
     position: relative;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-    animation: pulse 1.2s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(255, 225, 53, 0.4);
     transition: all 0.3s ease-in-out;
     overflow: visible;
-  }
-  
-  .monster-body::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 70%);
-    border-radius: inherit;
+    animation: chomp 0.5s infinite;
+    /* Default mouth state (open) */
+    clip-path: polygon(
+      50% 50%,
+      100% 0%,
+      100% 100%,
+      50% 50%,
+      0% 100%,
+      0% 0%
+    );
   }
   
   .monster.eating .monster-body {
-    transform: scale(1.2);
-    background: radial-gradient(circle at 40% 30%, #3b5365, #1a1a1a);
+    transform: scale(4);
+    animation: chomp 0.1s infinite;
+    box-shadow: 0 0 30px rgba(255, 225, 53, 0.6);
   }
   
-  .monster-eyes {
-    position: absolute;
-    top: 30%;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    padding: 0 20%;
-    z-index: 3;
-  }
-  
-  .eye {
-    width: 30px;
-    height: 30px;
-    background: #3fa9f5;
-    border: 2px solid #2e7bbf;
-    border-radius: 50%;
-    position: relative;
-    animation: blink 4s infinite;
-    box-shadow: inset 0 0 6px rgba(63, 169, 245, 0.4), 0 0 10px rgba(63, 169, 245, 0.6);
-    overflow: hidden;
-  }
-  
-  .eye::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), transparent);
-    border-radius: 50%;
-  }
-  
-  .eye::after {
-    content: '';
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #000;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .monster.eating .eye {
-    animation: angry 0.5s infinite;
-    background: #e74c3c;
-    border-color: #c0392b;
-    box-shadow: inset 0 0 10px rgba(231, 76, 60, 0.5), 0 0 20px rgba(231, 76, 60, 0.8);
-  }
-  
-  .monster-horns {
-    position: absolute;
-    top: -25px;
-    left: 0;
-    right: 0;
-    height: 50px;
-    display: flex;
-    justify-content: space-around;
-    padding: 0 20%;
-    z-index: 4;
-  }
-  
-  .monster-horns::before,
-  .monster-horns::after {
-    content: '';
-    width: 20px;
-    height: 50px;
-    background: linear-gradient(to top, #3fa9f5, #2e7bbf);
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    transform: rotate(-20deg);
-    box-shadow: 0 0 10px rgba(63, 169, 245, 0.7);
-  }
-  
-  .monster-horns::after {
-    transform: rotate(20deg);
-  }
-  
-  .monster-mouth {
-    position: absolute;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 35px;
-    background: linear-gradient(to bottom, #2c3e50, #1a1a1a);
-    border-radius: 0 0 35px 35px;
-    box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.1), 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease-in-out;
-    animation: chew 0.5s infinite;
-    z-index: 2;
-  }
-  
-  .monster.eating .monster-mouth {
-    width: 190px;
-    height: 45px;
-    animation: bite 0.5s infinite;
-    background: linear-gradient(to bottom, #3b5365, #2c3e50);
-  }
-  
+  /* Remove all unnecessary elements */
+  .monster-eyes,
+  .monster-horns,
+  .monster-mandibles,
+  .monster-tail,
+  .monster-wings,
+  .monster-mouth,
   .monster-teeth {
-    position: absolute;
-    bottom: 22%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 25px;
-    display: flex;
-    justify-content: space-between;
-    opacity: 0;
-    transition: all 0.3s ease-in-out;
-    z-index: 3;
-  }
-  
-  .monster.eating .monster-teeth {
-    opacity: 1;
-  }
-  
-  .monster-teeth::before,
-  .monster-teeth::after {
-    content: '';
-    width: 12px;
-    height: 25px;
-    background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
-    border-radius: 0 0 6px 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), inset 0 0 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .monster-teeth::before {
-    transform: rotate(-5deg);
-  }
-  
-  .monster-teeth::after {
-    transform: rotate(5deg);
-  }
-  
-  .monster-tail {
-    position: absolute;
-    bottom: -30px;
-    right: -20px;
-    width: 60px;
-    height: 120px;
-    background: linear-gradient(to bottom, #2c3e50, #1a1a1a);
-    border-radius: 50% 50% 0 0;
-    transform: rotate(45deg);
-    animation: tailWag 2s ease-in-out infinite;
-    z-index: 0;
-  }
-  
-  .monster-wings {
-    position: absolute;
-    width: 200%;
-    height: 90px;
-    top: 15%;
-    left: -50%;
-    background: radial-gradient(ellipse at center, rgba(255, 0, 0, 0.2) 0%, transparent 80%);
-    clip-path: polygon(0 100%, 50% 0%, 100% 100%);
-    animation: flapWings 2s ease-in-out infinite;
-    transform-origin: top center;
-    z-index: 1;
+    display: none;
   }
   
   /* Animations */
@@ -213,20 +65,12 @@
     50% { transform: scale(1.05); }
   }
   
-  @keyframes blink {
-    0%, 45%, 55%, 100% { transform: scaleY(1); }
-    50% { transform: scaleY(0.1); }
-  }
-  
-  @keyframes chew {
-    0%, 100% { transform: translateX(-50%) scaleY(1); }
-    50% { transform: translateX(-50%) scaleY(0.6); }
-  }
-  
-  @keyframes bite {
-    0% { transform: translateX(-50%) scaleY(1); }
-    50% { transform: translateX(-50%) scaleY(0.4); }
-    100% { transform: translateX(-50%) scaleY(1); }
+  @keyframes chomp {
+    0% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 50% 50%, 0 0); }
+    25% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 50% 50%, 25% 0); }
+    50% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%); }
+    75% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 50% 50%, 75% 0); }
+    100% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 50% 50%, 0 0); }
   }
   
   @keyframes eat {
@@ -235,18 +79,18 @@
     100% { transform: scale(1) rotate(0deg); }
   }
   
-  @keyframes angry {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.2) rotate(5deg); }
+  /* Media Queries for Responsive Scaling */
+  @media (max-width: 768px) {
+    .monster-effect {
+      width: 150px;
+      height: 150px;
+    }
   }
   
-  @keyframes tailWag {
-    0%, 100% { transform: rotate(45deg); }
-    50% { transform: rotate(55deg); }
-  }
-  
-  @keyframes flapWings {
-    0%, 100% { transform: scaleY(1); }
-    50% { transform: scaleY(0.85); }
+  @media (max-width: 480px) {
+    .monster-effect {
+      width: 100px;
+      height: 100px;
+    }
   }
   

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './monster.css'; // optional: for custom animations
 
 const NotFound = () => {
   const [eatProgress, setEatProgress] = useState(0);
