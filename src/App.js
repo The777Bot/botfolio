@@ -90,6 +90,10 @@ function AppContent() {
     };
   }, []);
 
+  const handleSummonMonster = () => {
+    setIsMonsterActive(true);
+  };
+
   return (
     <div className="App" style={{ 
       backgroundColor: 'var(--bg-color)', 
@@ -128,30 +132,20 @@ function AppContent() {
 
       {/* Monster Button */}
       <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setIsMonsterActive(true)}
+        onClick={handleSummonMonster}
+        className="pacman-button"
         style={{
           position: 'fixed',
-          bottom: '50px',
-          right: '20px',
-          background: '#9b0000',
-          color: '#fff',
-          border: '2px solid #fff',
-          padding: '10px 20px',
-          borderRadius: '5px',
-          fontFamily: 'Press Start 2P',
-          fontSize: 'clamp(10px, 0.8vw, 16px)',
-          cursor: 'pointer',
+          top: '87vh',
+          right: '1vw',
           zIndex: 10000,
-          boxShadow: '0 0 10px rgba(155, 0, 0, 0.5)',
           display: 'flex',
           alignItems: 'center',
           gap: '10px'
         }}
       >
         <span>⚠️</span>
-        <span>SUMMON MONSTER</span>
+        <span>SUMMON PAC-MAN</span>
       </motion.button>
 
       {/* Fixed Dark Mode Toggle */}

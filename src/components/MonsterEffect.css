@@ -37,6 +37,20 @@
     );
   }
   
+  /* Add Pac-Man eye */
+  .monster-body::before {
+    content: '';
+    position: absolute;
+    top: 12%;
+    left: 45%;
+    width: 12%;
+    height: 12%;
+    background: #000;
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+  
   .monster.eating .monster-body {
     transform: scale(4);
     animation: chomp 0.1s infinite;
@@ -93,4 +107,67 @@
       height: 100px;
     }
   }
+  
+  /* Retro Pac-Man Button Styles */
+  .pacman-button {
+    background: #000 !important;
+    color: #FFE135 !important; /* Pac-Man yellow */
+    border: 4px solid #FFE135 !important;
+    border-radius: 30px !important;
+    font-family: 'Press Start 2P', cursive !important; /* Retro arcade font */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 15px 25px !important;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+      0 0 0 2px #000,
+      0 0 0 4px #FFE135,
+      0 0 20px rgba(255, 225, 53, 0.4) !important;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .pacman-button:hover {
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 0 2px #000,
+      0 0 0 4px #FFE135,
+      0 0 30px rgba(255, 225, 53, 0.6) !important;
+  }
+  
+  .pacman-button:active {
+    transform: scale(0.95);
+  }
+  
+  .pacman-button::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: #000;
+    z-index: -2;
+    border: 2px dashed #FFE135;
+  }
+  
+  .pacman-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 45%, rgba(255, 225, 53, 0.2) 50%, transparent 55%);
+    animation: buttonShine 2s infinite linear;
+    z-index: -1;
+  }
+  
+  @keyframes buttonShine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
   
