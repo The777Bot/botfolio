@@ -19,16 +19,47 @@
       background: black;
       image-rendering: pixelated;
     }
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 18px;
+      padding: 0 32px;
+      letter-spacing: 2px;
+      background: #111;
+      border-bottom: 2px solid #4a90e2;
+      z-index: 10;
+      box-sizing: border-box;
+    }
     #controls {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      color: white;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
       font-size: 12px;
+      font-family: 'Press Start 2P', monospace;
+      background: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      letter-spacing: 1px;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
+  <div id="hud">
+    <span id="score-label">SCORE: <span id="score">0000</span></span>
+    <span id="lives-label">LIVES: <span id="lives">3</span></span>
+  </div>
   <canvas id="gameCanvas"></canvas>
   <div id="controls">← → to move, Space to shoot</div>
   <script>
@@ -37,7 +68,24 @@
     canvas.width = 800;
     canvas.height = 600;
 
-    // Constants
+    // --- Static Starfield ---
+    const stars = Array.from({length: 80}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height
+    }));
+    function drawStars() {
+      ctx.fillStyle = '#fff';
+      stars.forEach(star => {
+        ctx.fillRect(star.x, star.y, 2, 2);
+      });
+    }
+
+    // Classic colors
+    const PLAYER_COLOR = '#3fff3f'; // green
+    const ENEMY_COLOR = '#4a90e2'; // blue
+    const BULLET_COLOR = '#fff'; // white
+    const ENEMY_BULLET_COLOR = '#ff4444'; // red
+
     const PLAYER_SPEED = 5;
     const BULLET_SPEED = 7;
     const ENEMY_BULLET_SPEED = 5;
@@ -177,35 +225,37 @@
     }
 
     function draw() {
+      // Static starfield background
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawStars();
 
       // Player
-      ctx.fillStyle = '#4a90e2';
+      ctx.fillStyle = PLAYER_COLOR;
       ctx.fillRect(player.x, player.y, player.width, player.height);
 
       // Bullets
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = BULLET_COLOR;
       bullets.forEach(b => ctx.fillRect(b.x, b.y, b.width, b.height));
 
       // Enemy bullets
-      ctx.fillStyle = '#ff4444';
+      ctx.fillStyle = ENEMY_BULLET_COLOR;
       enemyBullets.forEach(b => ctx.fillRect(b.x, b.y, b.width, b.height));
 
       // Enemies
-      ctx.fillStyle = '#4a90e2';
+      ctx.fillStyle = ENEMY_COLOR;
       enemies.forEach(e => ctx.fillRect(e.x, e.y, e.width, e.height));
+    }
 
-      // HUD
-      ctx.fillStyle = '#fff';
-      ctx.font = '20px "Press Start 2P"';
-      ctx.fillText(`Score: ${score}`, 10, 30);
-      ctx.fillText(`Lives: ${lives}`, canvas.width - 150, 30);
+    function updateHUD() {
+      document.getElementById('score').textContent = score.toString().padStart(4, '0');
+      document.getElementById('lives').textContent = lives;
     }
 
     function gameLoop() {
       update();
       draw();
+      updateHUD();
       requestAnimationFrame(gameLoop);
     }
 
