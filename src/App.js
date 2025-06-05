@@ -12,6 +12,7 @@ import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import NotFound from './pages/NotFound';
+import SpaceInvader from './components/SpaceInvader';
 
 function AppContent() {
   const { isDarkMode, toggleDarkMode } = useTheme();
@@ -398,9 +399,13 @@ function AppContent() {
               width: '20%',
               padding: '1vw',
               color: 'var(--text-color)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1vw'
             }}
           >
             <ArcadeLauncher />
+            <SpaceInvader />
           </motion.section>
         </motion.div>
 

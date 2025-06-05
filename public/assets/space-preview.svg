@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#000000"/>
+  
+  <!-- Player -->
+  <rect x="175" y="270" width="50" height="30" fill="#4a90e2"/>
+  
+  <!-- Enemies -->
+  <g fill="#4a90e2">
+    <rect x="50" y="30" width="40" height="30"/>
+    <rect x="100" y="30" width="40" height="30"/>
+    <rect x="150" y="30" width="40" height="30"/>
+    <rect x="200" y="30" width="40" height="30"/>
+    <rect x="250" y="30" width="40" height="30"/>
+    <rect x="300" y="30" width="40" height="30"/>
+    
+    <rect x="50" y="70" width="40" height="30"/>
+    <rect x="100" y="70" width="40" height="30"/>
+    <rect x="150" y="70" width="40" height="30"/>
+    <rect x="200" y="70" width="40" height="30"/>
+    <rect x="250" y="70" width="40" height="30"/>
+    <rect x="300" y="70" width="40" height="30"/>
+  </g>
+  
+  <!-- Bullets -->
+  <g fill="#ffffff">
+    <rect x="198" y="250" width="4" height="15"/>
+    <rect x="198" y="230" width="4" height="15"/>
+    <rect x="198" y="210" width="4" height="15"/>
+  </g>
+  
+  <!-- Enemy Bullets -->
+  <g fill="#ff4444">
+    <rect x="70" y="60" width="4" height="15"/>
+    <rect x="170" y="60" width="4" height="15"/>
+    <rect x="270" y="60" width="4" height="15"/>
+  </g>
+  
+  <!-- Score and Lives -->
+  <text x="10" y="20" fill="#ffffff" font-family="'Press Start 2P'" font-size="10">Score: 0000</text>
+  <text x="250" y="20" fill="#ffffff" font-family="'Press Start 2P'" font-size="10">Lives: 3</text>
+</svg> 

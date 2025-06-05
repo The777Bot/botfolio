@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.space-button {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin: 2vw auto;
+}
+
+.space-button-inner {
+  position: relative;
+  border: 0.2vw solid #4a90e2;
+  border-radius: 0.4vw;
+  padding: 0.2vw;
+  background: #1a1a1a;
+  width: 15vw;
+  height: 13vw;
+  box-shadow: 0 0 0.5vw rgba(74, 144, 226, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.space-button-inner img {
+  display: block;
+  width: 12vw;
+  height: 8vw;
+  object-fit: cover;
+  background-color: #1a1a1a;
+  border-radius: 0.1vw;
+}
+
+.space-button.hover .space-button-inner {
+  transform: scale(1.1);
+  box-shadow: 0 0 1vw rgba(74, 144, 226, 0.8);
+}
+
+.space-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0.2vw;
+  background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.2), transparent);
+  animation: glow 2s infinite;
+}
+
+.space-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60vw;
+  height: 70vh;
+  background: #1a1a1a;
+  border: 0.2vw solid #4a90e2;
+  border-radius: 0.4vw;
+  box-shadow: 0 0 2vw rgba(74, 144, 226, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.space-header {
+  background: #4a90e2;
+  padding: 0.5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.2vw solid #1a1a1a;
+  position: relative;
+}
+
+.space-title {
+  font-family: 'Press Start 2P', cursive;
+  color: #1a1a1a;
+  font-size: 1.2vw;
+  margin-left: 1vw;
+}
+
+.space-controls {
+  position: absolute;
+  right: 0.5vw;
+  top: 10%;
+  height: 80%;
+}
+
+.space-screen {
+  flex: 1;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.space-footer {
+  background: #4a90e2;
+  padding: 0.5vw;
+  display: flex;
+  justify-content: space-between;
+  border-top: 0.2vw solid #1a1a1a;
+}
+
+.space-info {
+  display: flex;
+  gap: 2vw;
+  font-family: 'Press Start 2P', cursive;
+  color: #1a1a1a;
+  font-size: 0.8vw;
+}
+
+.close-button {
+  font-family: 'Press Start 2P', cursive;
+  background: #b00020;
+  color: #fff;
+  border: none;
+  width: 2vw;
+  height: 2vw;
+  border-radius: 0.2vw;
+  cursor: pointer;
+  font-size: 0.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(176,0,32,0.3);
+}
+
+.close-button:hover {
+  background: #ff1744;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 16px #ff1744;
+}
