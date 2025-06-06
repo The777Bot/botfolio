@@ -6,11 +6,19 @@
   <title>Space Invaders</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      touch-action: none;
+    }
     body {
       margin: 0;
       overflow: hidden;
       background: black;
       font-family: 'Press Start 2P', monospace;
+      height: 100vh;
+      width: 100vw;
     }
     canvas {
       display: block;
@@ -30,8 +38,8 @@
       align-items: center;
       color: #fff;
       font-family: 'Press Start 2P', monospace;
-      font-size: 18px;
-      padding: 0 32px;
+      font-size: clamp(14px, 3vw, 22px);
+      padding: 0 clamp(8px, 4vw, 32px);
       letter-spacing: 2px;
       background: #111;
       border-bottom: 2px solid #4a90e2;
@@ -44,7 +52,7 @@
       left: 50%;
       transform: translateX(-50%);
       color: #fff;
-      font-size: 12px;
+      font-size: clamp(10px, 2vw, 16px);
       font-family: 'Press Start 2P', monospace;
       background: none;
       border-radius: 0;
@@ -52,6 +60,39 @@
       box-shadow: none;
       letter-spacing: 1px;
       z-index: 10;
+    }
+    #touch-controls {
+      display: none;
+      position: absolute;
+      bottom: 2vh;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      gap: 4vw;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+    #touch-controls button {
+      width: 16vw;
+      height: 16vw;
+      max-width: 80px;
+      max-height: 80px;
+      min-width: 48px;
+      min-height: 48px;
+      font-size: clamp(18px, 6vw, 32px);
+      border-radius: 50%;
+      border: 2px solid #4a90e2;
+      background: #181c2f;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      margin: 0 2vw;
+      box-shadow: 0 2px 8px #0008;
+      outline: none;
+      touch-action: manipulation;
+    }
+    @media (pointer: coarse) {
+      #touch-controls { display: flex; }
     }
   </style>
 </head>
@@ -62,6 +103,11 @@
   </div>
   <canvas id="gameCanvas"></canvas>
   <div id="controls">← → to move, Space to shoot</div>
+  <div id="touch-controls">
+    <button id="left-btn">◀️</button>
+    <button id="shoot-btn">🔫</button>
+    <button id="right-btn">▶️</button>
+  </div>
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -169,9 +215,9 @@
     }
 
     function update() {
-      if (keys['ArrowLeft']) player.x = Math.max(0, player.x - player.speed);
-      if (keys['ArrowRight']) player.x = Math.min(canvas.width - player.width, player.x + player.speed);
-      if (keys[' '] && bullets.length < 3) shoot();
+      if (keys['ArrowLeft'] || leftPressed) player.x = Math.max(0, player.x - player.speed);
+      if (keys['ArrowRight'] || rightPressed) player.x = Math.min(canvas.width - player.width, player.x + player.speed);
+      if ((keys[' '] || shootPressed) && bullets.length < 3) shoot();
 
       // Bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
@@ -288,13 +334,34 @@
     }
 
     function resizeCanvas() {
-      const scale = Math.min(window.innerWidth / 800, window.innerHeight / 600);
-      canvas.style.transform = `scale(${scale})`;
-      canvas.style.transformOrigin = 'top left';
+      const aspect = 800 / 600;
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      if (width / height > aspect) {
+        width = height * aspect;
+      } else {
+        height = width / aspect;
+      }
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
     }
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+
+    // Touch controls logic
+    const leftBtn = document.getElementById('left-btn');
+    const rightBtn = document.getElementById('right-btn');
+    const shootBtn = document.getElementById('shoot-btn');
+    let leftPressed = false, rightPressed = false, shootPressed = false;
+    if (leftBtn && rightBtn && shootBtn) {
+      leftBtn.addEventListener('touchstart', e => { e.preventDefault(); leftPressed = true; });
+      leftBtn.addEventListener('touchend', e => { e.preventDefault(); leftPressed = false; });
+      rightBtn.addEventListener('touchstart', e => { e.preventDefault(); rightPressed = true; });
+      rightBtn.addEventListener('touchend', e => { e.preventDefault(); rightPressed = false; });
+      shootBtn.addEventListener('touchstart', e => { e.preventDefault(); shootPressed = true; });
+      shootBtn.addEventListener('touchend', e => { e.preventDefault(); shootPressed = false; });
+    }
 
     // Start game
     createEnemies();
