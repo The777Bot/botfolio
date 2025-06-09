@@ -200,22 +200,57 @@ const GithubContributions = () => {
   useEffect(() => {
     const fetchContributions = async () => {
       try {
-        // Use environment variable for API URL
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-        const response = await fetch(`${apiUrl}/api/github/contributions`);
-        const data = await response.json();
+        // Replace 'YOUR_GITHUB_USERNAME' with your actual GitHub username
+        const username = 'The777Bot';
         
+        const response = await fetch('https://api.github.com/graphql', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: `
+              query {
+                user(login: "${username}") {
+                  contributionsCollection {
+                    contributionCalendar {
+                      totalContributions
+                      weeks {
+                        contributionDays {
+                          date
+                          contributionCount
+                          color
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `
+          })
+        });
+
         if (!response.ok) {
-          throw new Error(data.message || 'Failed to fetch contributions');
+          throw new Error('Failed to fetch contributions');
         }
 
+        const data = await response.json();
+        const contributionDays = data.data.user.contributionsCollection.contributionCalendar.weeks
+          .flatMap(week => week.contributionDays)
+          .map(day => ({
+            date: day.date,
+            count: day.contributionCount,
+            color: day.color
+          }));
+
         setContributions({
-          totalContributions: data.totalContributions,
-          contributionDays: data.contributionDays
+          totalContributions: data.data.user.contributionsCollection.contributionCalendar.totalContributions,
+          contributionDays
         });
       } catch (err) {
         console.error('Error fetching contributions:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch contributions');
+        setError('Failed to fetch contributions');
       } finally {
         setLoading(false);
       }
@@ -227,7 +262,7 @@ const GithubContributions = () => {
   if (loading) {
     return (
       <Container>
-        <LoadingText>LOADING CONTRIBUTIONS...</LoadingText>
+        <LoadingText>Loading contributions...</LoadingText>
       </Container>
     );
   }
@@ -235,42 +270,29 @@ const GithubContributions = () => {
   if (error) {
     return (
       <Container>
-        <ErrorText>ERROR: {error}</ErrorText>
-        <div style={{ 
-          color: '#4a90e2', 
-          fontSize: '0.7rem', 
-          marginTop: '10px',
-          textAlign: 'center' 
-        }}>
-          Please check your GitHub token in .env file
-        </div>
+        <ErrorText>{error}</ErrorText>
       </Container>
     );
   }
 
-  if (!contributions || !contributions.contributionDays) {
-    return (
-      <Container>
-        <ErrorText>No contribution data available</ErrorText>
-      </Container>
-    );
+  if (!contributions) {
+    return null;
   }
 
   return (
     <Container>
-      <Title>GITHUB CONTRIBUTIONS</Title>
+      <Title>GitHub Contributions</Title>
       <Calendar>
         {contributions.contributionDays.map((day, index) => (
-          <Day 
-            key={index} 
-            color={day.color} 
-            title={`${day.date}: ${day.contributionCount} contributions`} 
+          <Day
+            key={index}
+            color={day.color}
+            title={`${day.date}: ${day.count} contributions`}
           />
         ))}
       </Calendar>
       <Stats>
-        <span>TOTAL: {contributions.totalContributions}</span>
-        <span>LAST YEAR</span>
+        <span>Total Contributions: {contributions.totalContributions}</span>
       </Stats>
     </Container>
   );
