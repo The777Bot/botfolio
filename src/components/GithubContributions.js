@@ -200,57 +200,18 @@ const GithubContributions = () => {
   useEffect(() => {
     const fetchContributions = async () => {
       try {
-        if (!process.env.REACT_APP_GITHUB_TOKEN) {
-          throw new Error('GitHub token not found. Please check your .env file.');
-        }
-
-        const response = await fetch('https://api.github.com/graphql', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: `
-              query {
-                user(login: "The777Bot") {
-                  contributionsCollection {
-                    contributionCalendar {
-                      totalContributions
-                      weeks {
-                        contributionDays {
-                          date
-                          contributionCount
-                          color
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            `
-          })
-        });
-
+        // Use environment variable for API URL
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${apiUrl}/api/github/contributions`);
         const data = await response.json();
         
-        // Debug log
-        console.log('GitHub API Response:', data);
-        
-        if (data.errors) {
-          throw new Error(data.errors[0].message);
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch contributions');
         }
-
-        if (!data.data || !data.data.user) {
-          throw new Error('User data not found. Please check the GitHub username.');
-        }
-
-        const contributionDays = data.data.user.contributionsCollection.contributionCalendar.weeks
-          .flatMap(week => week.contributionDays || []);
 
         setContributions({
-          totalContributions: data.data.user.contributionsCollection.contributionCalendar.totalContributions,
-          contributionDays
+          totalContributions: data.totalContributions,
+          contributionDays: data.contributionDays
         });
       } catch (err) {
         console.error('Error fetching contributions:', err);
