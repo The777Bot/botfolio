@@ -15,6 +15,7 @@ import NotFound from './pages/NotFound';
 import SpaceInvader from './components/SpaceInvader';
 import GithubContributions from './components/GithubContributions';
 import GithubProjects from './components/GithubProjects';
+import ColorBalls from './components/ColorBalls';
 
 function AppContent() {
   const { isDarkMode, toggleDarkMode } = useTheme();
@@ -462,6 +463,31 @@ function AppContent() {
 
       {/* Cyclone Effect */}
       <CycloneEffect isActive={isCycloneActive} />
+
+      <ColorBalls />
+
+      <motion.button
+        id="color-ball-trigger"
+        style={{
+          position: 'fixed',
+          bottom: '550px',
+          right: '920px',
+          padding: '10px 20px',
+          background: '#f7c305',
+          color: 'white',
+          border: 'none',
+          
+          borderRadius: '50px',
+          cursor: 'pointer',
+          fontFamily: 'Press Start 2P',
+          fontSize: '12px',
+          zIndex: 1001
+        }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        Color Balls!
+      </motion.button>
     </div>
   );
 }
