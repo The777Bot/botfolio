@@ -27,7 +27,7 @@ export default function BlackHoleTrap() {
         onClick={handleWarningClick}
         style={{
           position: 'relative',
-          bottom: '100px',
+          bottom: '160px',
           right: '840px',
           background: '#9b0000',
           color: '#fff',

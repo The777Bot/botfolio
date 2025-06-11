@@ -41,7 +41,7 @@ const ColorBalls = () => {
     '#2C3E50', // Darker Navy
     '#7D3C98', // Darker Violet
     '#1A5276', // Darker Royal Blue
-    '#ffda05',
+    '#ffda05', // yellow
   ];
 
   const GRAVITY = 0.7;

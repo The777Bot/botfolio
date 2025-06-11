@@ -472,8 +472,8 @@ function AppContent() {
         id="color-ball-trigger"
         style={{
           position: 'fixed',
-          bottom: '850px',
-          right: '90px',
+          bottom: '230px',
+          right: '920px',
           padding: '10px 20px',
           background: 'linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)',
           color: 'white',
