@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parkour Runner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      touch-action: none;
+    }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #1a1a1a;
+      font-family: 'Press Start 2P', monospace;
+      height: 100vh;
+      width: 100vw;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      border: 2px solid #2ecc71;
+      background: #1a1a1a;
+      image-rendering: pixelated;
+    }
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #2ecc71;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(14px, 3vw, 22px);
+      padding: 0 clamp(8px, 4vw, 32px);
+      letter-spacing: 2px;
+      background: #111;
+      border-bottom: 2px solid #2ecc71;
+      z-index: 10;
+      box-sizing: border-box;
+    }
+    #controls {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #2ecc71;
+      font-size: clamp(10px, 2vw, 16px);
+      font-family: 'Press Start 2P', monospace;
+      background: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      letter-spacing: 1px;
+      z-index: 10;
+    }
+    #touch-controls {
+      display: none;
+      position: absolute;
+      bottom: 15vh;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      gap: 4vw;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+    #touch-controls button {
+      width: 16vw;
+      height: 16vw;
+      max-width: 80px;
+      max-height: 80px;
+      min-width: 48px;
+      min-height: 48px;
+      font-size: clamp(18px, 6vw, 32px);
+      border-radius: 50%;
+      border: 2px solid #2ecc71;
+      background: #181c2f;
+      color: #2ecc71;
+      font-family: 'Press Start 2P', monospace;
+      margin: 0 2vw;
+      box-shadow: 0 2px 8px #0008;
+      outline: none;
+      touch-action: manipulation;
+    }
+    @media (pointer: coarse) {
+      #touch-controls { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">
+    <span id="score-label">SCORE: <span id="score">0000</span></span>
+    <span id="lives-label">LIVES: <span id="lives">3</span></span>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+  <div id="controls">Space to jump, ← → to move</div>
+  <div id="touch-controls">
+    <button id="left-btn">◀️</button>
+    <button id="jump-btn">⬆️</button>
+    <button id="right-btn">▶️</button>
+  </div>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 600;
+
+    // Game constants
+    const GRAVITY = 0.5;
+    const JUMP_FORCE = -12;
+    const DOUBLE_JUMP_FORCE = -10;
+    const GAME_SPEED = 5; // Speed at which the world moves (obstacles and background)
+    const PLAYER_FIXED_X = 100; // Player's fixed horizontal position
+
+    const PLAYER_NORMAL_HEIGHT = 50;
+    const PLAYER_HIDE_HEIGHT = 25;
+    const PLAYER_DOUBLE_HIDE_HEIGHT = 10;
+    
+    // Obstacle types
+    const OBSTACLES = {
+        WALL: { w: 40, h: 60, c: '#8B4513' },
+        BARRIER: { w: 50, h: 30, c: '#D35400' },
+        LOW_BAR: { w: 60, h: 20, c: '#2C3E50' }
+    };
+
+    // Game state
+    let score;
+    let lives;
+    let gameOver;
+    let lastObstacleX;
+    let obstacles;
+    let backgroundScrollX = 0;
+
+    // Player object
+    const player = {
+      x: PLAYER_FIXED_X,
+      y: 0, // Will be set in initGame
+      w: 30, // Using 'w' for width to match obstacles
+      h: PLAYER_NORMAL_HEIGHT, // Using 'h' for height
+      vy: 0, // Using 'vy' for vertical velocity
+      jumps: 0,
+      state: 'normal', // 'normal', 'hide', 'double-hide'
+      color: '#ff0000'
+    };
+
+    // Initialize game elements
+    function initGame() {
+      score = 0;
+      lives = 3;
+      gameOver = false;
+      player.h = PLAYER_NORMAL_HEIGHT;
+      player.y = canvas.height - 100 - player.h; // Place player on the ground
+      player.vy = 0;
+      player.jumps = 0;
+      player.state = 'normal';
+      obstacles = [];
+      lastObstacleX = canvas.width; // Start first obstacle off-screen
+      backgroundScrollX = 0;
+      
+      // Generate initial obstacles
+      for (let i = 0; i < 3; i++) {
+          spawnObstacle();
+      }
+    }
+
+    // Generate a new obstacle
+    function spawnObstacle() {
+        const typeKeys = Object.keys(OBSTACLES);
+        const randomTypeKey = typeKeys[Math.floor(Math.random() * typeKeys.length)];
+        const type = OBSTACLES[randomTypeKey];
+        const minGap = 250;
+        const maxGap = 450;
+        const gap = Math.random() * (maxGap - minGap) + minGap;
+
+        obstacles.push({
+            x: lastObstacleX + gap,
+            y: canvas.height - 100 - type.h,
+            w: type.w,
+            h: type.h,
+            c: type.c,
+            type: randomTypeKey
+        });
+        lastObstacleX = obstacles[obstacles.length - 1].x + obstacles[obstacles.length - 1].w;
+    }
+
+    // Input handling
+    const keys = {};
+    document.addEventListener('keydown', e => {
+      keys[e.key] = true;
+      if (e.key === ' ' || e.key === 'ArrowUp') { // Jump/Double Jump
+        if (player.state === 'normal' && player.jumps < 2) {
+            player.vy = (player.jumps === 0) ? JUMP_FORCE : DOUBLE_JUMP_FORCE;
+            player.jumps++;
+        }
+      } else if (e.key === 'ArrowDown') { // Hide / Double Hide
+        if (player.state === 'normal') {
+            player.state = 'hide';
+            player.h = PLAYER_HIDE_HEIGHT;
+            player.y = canvas.height - 100 - player.h;
+        } else if (player.state === 'hide') {
+            player.state = 'double-hide';
+            player.h = PLAYER_DOUBLE_HIDE_HEIGHT;
+            player.y = canvas.height - 100 - player.h;
+        }
+      } else if (e.key.toLowerCase() === 'r' && gameOver) {
+        initGame();
+        loop();
+      }
+    });
+
+    document.addEventListener('keyup', e => {
+      keys[e.key] = false;
+      if (e.key === 'ArrowDown') { // Release Hide / Double Hide
+        if (player.state === 'double-hide') {
+            player.state = 'hide';
+            player.h = PLAYER_HIDE_HEIGHT;
+            player.y = canvas.height - 100 - player.h;
+        } else if (player.state === 'hide') {
+            player.state = 'normal';
+            player.h = PLAYER_NORMAL_HEIGHT;
+            player.y = canvas.height - 100 - player.h;
+        }
+      }
+    });
+
+    // Touch Controls
+    const jumpBtn = document.getElementById('btn-jump');
+    const hideBtn = document.getElementById('btn-hide');
+
+    if (jumpBtn) {
+      jumpBtn.addEventListener('touchstart', e => { 
+        e.preventDefault(); 
+        if (player.state === 'normal' && player.jumps < 2) {
+            player.vy = (player.jumps === 0) ? JUMP_FORCE : DOUBLE_JUMP_FORCE;
+            player.jumps++;
+        }
+      });
+    }
+
+    if (hideBtn) {
+        hideBtn.addEventListener('touchstart', e => {
+            e.preventDefault();
+            if (player.state === 'normal') {
+                player.state = 'hide';
+                player.h = PLAYER_HIDE_HEIGHT;
+                player.y = canvas.height - 100 - player.h;
+            } else if (player.state === 'hide') {
+                player.state = 'double-hide';
+                player.h = PLAYER_DOUBLE_HIDE_HEIGHT;
+                player.y = canvas.height - 100 - player.h;
+            }
+        });
+        hideBtn.addEventListener('touchend', e => {
+            e.preventDefault();
+            if (player.state === 'double-hide') {
+                player.state = 'hide';
+                player.h = PLAYER_HIDE_HEIGHT;
+                player.y = canvas.height - 100 - player.h;
+            } else if (player.state === 'hide') {
+                player.state = 'normal';
+                player.h = PLAYER_NORMAL_HEIGHT;
+                player.y = canvas.height - 100 - player.h;
+            }
+        });
+    }
+
+    function hit(rect1, rect2) {
+      return rect1.x < rect2.x + rect2.w &&
+             rect1.x + rect1.w > rect2.x &&
+             rect1.y < rect2.y + rect2.h &&
+             rect1.y + rect1.h > rect2.y;
+    }
+
+    function update() {
+      if (gameOver) return;
+
+      // Apply gravity
+      player.vy += GRAVITY;
+      player.y += player.vy;
+
+      // Keep player on ground
+      const groundY = canvas.height - 100 - player.h;
+      if (player.y > groundY) {
+        player.y = groundY;
+        player.vy = 0;
+        player.jumps = 0; // Reset jump count when on ground
+      }
+
+      // Update obstacles (they move towards the player)
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        obstacles[i].x -= GAME_SPEED;
+
+        // Check for collision with player
+        if (hit(player, obstacles[i])) {
+            let collided = true;
+            const obstacle = obstacles[i];
+
+            if (obstacle.type === 'BARRIER' && (player.state === 'hide' || player.state === 'double-hide')) {
+                collided = false; // Player successfully hid under barrier
+            } else if (obstacle.type === 'LOW_BAR' && player.state === 'double-hide') {
+                collided = false; // Player successfully double-hid under low bar
+            } else if (obstacle.type === 'LOW_BAR' && player.state === 'hide' && player.h === PLAYER_HIDE_HEIGHT) { // Check if only single hide
+                collided = true; // Can't clear low bar with just single hide
+            } else if (obstacle.type === 'WALL' && player.y + player.h <= obstacle.y + 1) { // Player successfully jumped over
+                 collided = false;
+            } else if (obstacle.type === 'WALL') { // If not jumped over a wall, it's a collision
+                collided = true;
+            }
+
+
+            if (collided) {
+                lives--;
+                if (lives <= 0) {
+                    gameOver = true;
+                }
+                obstacles.splice(i, 1); // Remove obstacle after collision
+            } else {
+                score += 50; // Award points for successfully avoiding
+                obstacles.splice(i, 1); // Remove obstacle after successful avoidance
+            }
+        } else if (obstacles[i].x + obstacles[i].w < 0) {
+          // Remove off-screen obstacles
+          obstacles.splice(i, 1);
+          score += 10; // Award points for clearing obstacles
+        }
+      }
+
+      // Generate new obstacles as needed
+      // Ensure there are always some obstacles and new ones spawn when close to the last one
+      if (obstacles.length < 3) {
+          spawnObstacle();
+      }
+      if (obstacles.length > 0 && obstacles[obstacles.length - 1].x < canvas.width * 0.7) {
+          spawnObstacle();
+      }
+
+      // Update background scroll
+      backgroundScrollX -= GAME_SPEED * 0.5; // Slower scroll for background
+      if (backgroundScrollX <= -canvas.width) {
+          backgroundScrollX = 0;
+      }
+
+      // Update HUD
+      document.getElementById('score').textContent = score.toString().padStart(4, '0');
+      document.getElementById('lives').textContent = lives;
+    }
+
+    // Draw game
+    function draw() {
+      const g = ctx;
+
+      // Draw background (sky, distant buildings)
+      let skyGradient = g.createLinearGradient(0, 0, 0, canvas.height);
+      skyGradient.addColorStop(0, '#ffab73'); // Light orange for dawn/dusk
+      skyGradient.addColorStop(1, '#e75a7c'); // Deeper pink/red
+      g.fillStyle = skyGradient;
+      g.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Distant city silhouette (scrolling)
+      g.fillStyle = '#6a0572'; // Dark purple/blue
+      const drawCityscape = (offsetX) => {
+        g.beginPath();
+        g.moveTo(offsetX, canvas.height * 0.7);
+        g.lineTo(offsetX + canvas.width * 0.1, canvas.height * 0.6);
+        g.lineTo(offsetX + canvas.width * 0.2, canvas.height * 0.65);
+        g.lineTo(offsetX + canvas.width * 0.3, canvas.height * 0.55);
+        g.lineTo(offsetX + canvas.width * 0.4, canvas.height * 0.68);
+        g.lineTo(offsetX + canvas.width * 0.5, canvas.height * 0.6);
+        g.lineTo(offsetX + canvas.width * 0.6, canvas.height * 0.7);
+        g.lineTo(offsetX + canvas.width * 0.7, canvas.height * 0.62);
+        g.lineTo(offsetX + canvas.width * 0.8, canvas.height * 0.75);
+        g.lineTo(offsetX + canvas.width * 0.9, canvas.height * 0.68);
+        g.lineTo(offsetX + canvas.width, canvas.height * 0.75);
+        g.lineTo(offsetX + canvas.width, canvas.height);
+        g.lineTo(offsetX, canvas.height);
+        g.closePath();
+        g.fill();
+      };
+      drawCityscape(backgroundScrollX);
+      drawCityscape(backgroundScrollX + canvas.width); // Draw a second one for seamless scroll
+
+      // Closer buildings (more defined, with windows - static for simplicity, or could scroll slower)
+      g.fillStyle = '#3e044d'; // Darker purple
+      g.fillRect(0, canvas.height * 0.75, canvas.width, canvas.height * 0.25);
+      
+      g.fillStyle = '#4b055d';
+      g.fillRect(50, canvas.height * 0.65, 120, canvas.height * 0.1);
+      g.fillRect(200, canvas.height * 0.55, 100, canvas.height * 0.2);
+      g.fillRect(350, canvas.height * 0.68, 150, canvas.height * 0.07);
+      g.fillRect(550, canvas.height * 0.5, 90, canvas.height * 0.25);
+      g.fillRect(680, canvas.height * 0.6, 100, canvas.height * 0.15);
+
+      // Draw the rooftop ground
+      g.fillStyle = '#5c5c8a'; // Darker grey/blue for rooftop base
+      g.fillRect(0, canvas.height - 100, canvas.width, 100);
+      g.fillStyle = '#8a8ad0'; // Lighter top border for detail
+      g.fillRect(0, canvas.height - 100, canvas.width, 5);
+
+      // Draw obstacles
+      obstacles.forEach(obstacle => {
+        g.fillStyle = obstacle.c;
+        g.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+      });
+
+      // Draw player
+      g.fillStyle = player.color;
+      g.fillRect(player.x, player.y, player.w, player.h);
+
+      // Draw game over screen
+      if (gameOver) {
+        g.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        g.fillRect(0, 0, canvas.width, canvas.height);
+        g.fillStyle = '#2ecc71';
+        g.font = '32px "Press Start 2P"';
+        g.textAlign = 'center';
+        g.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
+        g.font = '20px "Press Start 2P"';
+        g.fillText('Press R to Restart', canvas.width / 2, canvas.height / 2 + 40);
+      }
+    }
+
+    function loop() {
+      update();
+      draw();
+      if (!gameOver) {
+        requestAnimationFrame(loop);
+      }
+    }
+
+    // Event listeners (keeping simple for now)
+    window.addEventListener('resize', () => {
+        // You might want to adjust canvas dimensions here if making it truly responsive
+        // For now, keeping fixed for game logic simplicity
+    });
+
+    initGame();
+    loop();
+  </script>
+</body>
+</html> 

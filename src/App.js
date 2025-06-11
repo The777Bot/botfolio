@@ -16,6 +16,7 @@ import SpaceInvader from './components/SpaceInvader';
 import GithubContributions from './components/GithubContributions';
 import GithubProjects from './components/GithubProjects';
 import ColorBalls from './components/ColorBalls';
+import ParkourRunner from './components/ParkourRunner';
 
 function AppContent() {
   const { isDarkMode, toggleDarkMode } = useTheme();
@@ -413,6 +414,7 @@ function AppContent() {
           >
             <ArcadeLauncher />
             <SpaceInvader />
+            <ParkourRunner />
           </motion.section>
         </motion.div>
 

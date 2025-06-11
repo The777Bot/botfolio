@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.parkour-button {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin: 2vw auto;
+}
+
+.parkour-button-inner {
+  position: relative;
+  border: 0.2vw solid #2ecc71;
+  border-radius: 0.4vw;
+  padding: 0.2vw;
+  background: #1a1a1a;
+  width: 15vw;
+  height: 13vw;
+  box-shadow: 0 0 0.5vw rgba(46, 204, 113, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.parkour-button-inner img {
+  display: block;
+  width: 12vw;
+  height: 8vw;
+  object-fit: cover;
+  background-color: #1a1a1a;
+  border-radius: 0.1vw;
+}
+
+.parkour-button.hover .parkour-button-inner {
+  transform: scale(1.1);
+  box-shadow: 0 0 1vw rgba(46, 204, 113, 0.8);
+}
+
+.parkour-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0.2vw;
+  background: linear-gradient(45deg, transparent, rgba(46, 204, 113, 0.2), transparent);
+  animation: glow 2s infinite;
+}
+
+.parkour-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60vw;
+  height: 70vh;
+  min-width: 280px;
+  min-height: 320px;
+  max-width: 98vw;
+  max-height: 98vh;
+  background: #1a1a1a;
+  border: 0.2vw solid #2ecc71;
+  border-radius: 0.4vw;
+  box-shadow: 0 0 2vw rgba(46, 204, 113, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.parkour-header {
+  background: #2ecc71;
+  padding: 0.5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.2vw solid #1a1a1a;
+  position: relative;
+}
+
+.parkour-title {
+  font-family: 'Press Start 2P', cursive;
+  color: #1a1a1a;
+  font-size: 1.2vw;
+  margin-left: 1vw;
+}
+
+.parkour-controls {
+  position: absolute;
+  right: 0.5vw;
+  top: 10%;
+  height: 80%;
+}
+
+.parkour-screen {
+  flex: 1;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.parkour-footer {
+  background: #2ecc71;
+  padding: 0.5vw;
+  display: flex;
+  justify-content: space-between;
+  border-top: 0.2vw solid #1a1a1a;
+}
+
+.parkour-info {
+  display: flex;
+  gap: 2vw;
+  font-family: 'Press Start 2P', cursive;
+  color: #1a1a1a;
+  font-size: 0.8vw;
+}
+
+.close-button {
+  font-family: 'Press Start 2P', cursive;
+  background: #b00020;
+  color: #fff;
+  border: none;
+  width: 2vw;
+  height: 2vw;
+  border-radius: 0.2vw;
+  cursor: pointer;
+  font-size: 0.8vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(176,0,32,0.3);
+}
+
+.close-button:hover {
+  background: #ff1744;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 16px #ff1744;
+}
+
+@media (max-width: 600px) {
+  .parkour-window {
+    width: 98vw;
+    height: 90vh;
+    border-radius: 2vw;
+    padding: 0.5vw;
+  }
+  .parkour-title {
+    font-size: 5vw;
+  }
+  .close-button {
+    width: 10vw;
+    height: 10vw;
+    font-size: 5vw;
+  }
+} 
