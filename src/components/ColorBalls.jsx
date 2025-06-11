@@ -41,12 +41,13 @@ const ColorBalls = () => {
     '#2C3E50', // Darker Navy
     '#7D3C98', // Darker Violet
     '#1A5276', // Darker Royal Blue
+    '#ffda05',
   ];
 
-  const GRAVITY = 0.5;
+  const GRAVITY = 0.7;
   const FRICTION = 0.8;
   const BOUNCE = 0.7;
-  const FOOTER_HEIGHT = 100; // Height of the footer area
+  const FOOTER_HEIGHT = 45; // Height of the footer area
 
   const addBalls = () => {
     const newBalls = Array.from({ length: 8 }, () => {

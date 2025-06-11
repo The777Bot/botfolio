@@ -74,7 +74,7 @@ body {
   footer, button {
     position: fixed !important;
     z-index: 10000 !important;
-    transform: none !important;
+    /* transform: none !important; */ /* Removed to allow framer-motion animations */
     animation: none !important;
   }
   
@@ -124,5 +124,16 @@ body {
   @keyframes rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+  
+  @keyframes rainbow-glow {
+    0% { box-shadow: 0 0 15px 5px rgba(255,0,0,0.7); }
+    14% { box-shadow: 0 0 15px 5px rgba(255,127,0,0.7); }
+    28% { box-shadow: 0 0 15px 5px rgba(255,255,0,0.7); }
+    42% { box-shadow: 0 0 15px 5px rgba(0,255,0,0.7); }
+    57% { box-shadow: 0 0 15px 5px rgba(0,0,255,0.7); }
+    71% { box-shadow: 0 0 15px 5px rgba(75,0,130,0.7); }
+    85% { box-shadow: 0 0 15px 5px rgba(143,0,255,0.7); }
+    100% { box-shadow: 0 0 15px 5px rgba(255,0,0,0.7); }
   }
   

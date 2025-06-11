@@ -333,8 +333,8 @@ function AppContent() {
         }}>
           <span style={{ color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
         <br />
-          <small style={{ fontSize: 'clamp(12px, 1vw, 16px)', color: '#ccc' }}>
-          Shake the mouse if you're curious...
+          <small style={{ fontSize: 'clamp(12px, 1vw, 16px)', color: isDarkMode ? '#f2f2f2' : '#000000' }}>
+          An Interactive Fun Portfolio site...
         </small>
       </h1>
       
@@ -472,18 +472,19 @@ function AppContent() {
         id="color-ball-trigger"
         style={{
           position: 'fixed',
-          bottom: '550px',
-          right: '920px',
+          bottom: '850px',
+          right: '90px',
           padding: '10px 20px',
-          background: '#f7c305',
+          background: 'linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)',
           color: 'white',
           border: 'none',
           
-          borderRadius: '50px',
+          borderRadius: '5px',
           cursor: 'pointer',
           fontFamily: 'Press Start 2P',
           fontSize: '12px',
-          zIndex: 1001
+          zIndex: 1001,
+          animation: 'rainbow-glow 3s linear infinite'
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
