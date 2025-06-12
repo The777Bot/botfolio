@@ -41,54 +41,39 @@ function AppContent() {
     });
   };
 
-  useEffect(() => {
-    let lastMouseX = 0;
-    let lastMouseY = 0;
+  const handleCycloneTrigger = () => {
+    if (!cooldownRef.current) {
+      // Clear any existing timeouts
+      Object.values(timeoutsRef.current).forEach(timeout => {
+        if (timeout) clearTimeout(timeout);
+      });
 
-    const handleMouseMove = (e) => {
-      const currentX = e.clientX;
-      const currentY = e.clientY;
+      // Start cyclone
+      setIsCycloneActive(true);
+      setIsRearranged(true);
       
-      // Calculate the distance moved
-      const deltaX = Math.abs(currentX - lastMouseX);
-      const deltaY = Math.abs(currentY - lastMouseY);
-      
-      // Only trigger if not on cooldown
-      if (!cooldownRef.current && (deltaX > 800 || deltaY > 800)) {
-        // Clear any existing timeouts
-        Object.values(timeoutsRef.current).forEach(timeout => {
-          if (timeout) clearTimeout(timeout);
-        });
-
-        // Start cyclone
-        setIsCycloneActive(true);
-        setIsRearranged(true);
+      // Remove cyclone effect after 1 second
+      timeoutsRef.current.cyclone = setTimeout(() => {
+        setIsCycloneActive(false);
         
-        // Remove cyclone effect after 1 second
-        timeoutsRef.current.cyclone = setTimeout(() => {
-          setIsCycloneActive(false);
-          
-          // Keep the rearrangement active for longer
-          timeoutsRef.current.rearrange = setTimeout(() => {
-            setIsRearranged(false);
-          }, 3000); // Keep rearranged state for 3 seconds
-          
-          // Start cooldown period
-          cooldownRef.current = true;
-          timeoutsRef.current.cooldown = setTimeout(() => {
-            cooldownRef.current = false;
-          }, 15000); // 15 seconds cooldown
-        }, 1000);
-      }
-      
-      lastMouseX = currentX;
-      lastMouseY = currentY;
-    };
+        // Keep the rearrangement active for longer
+        timeoutsRef.current.rearrange = setTimeout(() => {
+          setIsRearranged(false);
+        }, 3000); // Keep rearranged state for 3 seconds
+        
+        // Start cooldown period
+        cooldownRef.current = true;
+        timeoutsRef.current.cooldown = setTimeout(() => {
+          cooldownRef.current = false;
+        }, 15000); // 15 seconds cooldown
+      }, 1000);
+    }
+  };
 
-    window.addEventListener('mousemove', handleMouseMove);
+  // Remove the mouse movement effect
+  useEffect(() => {
+    // Clear all timeouts on cleanup
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      // Clear all timeouts on cleanup
       Object.values(timeoutsRef.current).forEach(timeout => {
         if (timeout) clearTimeout(timeout);
       });
@@ -116,16 +101,16 @@ function AppContent() {
         }}
         transition={{ duration: 0.5 }}
         style={{
-        position: 'fixed',
-        top: 0,
+          position: 'fixed',
+          top: 0,
           left: 0,
           right: 0,
           background: 'var(--header-bg)',
           color: 'var(--text-color)',
-        fontFamily: 'Press Start 2P',
+          fontFamily: 'Press Start 2P',
           fontSize: 'clamp(12px, 1.2vw, 24px)',
           padding: '1vh',
-        textAlign: 'center',
+          textAlign: 'center',
           borderBottom: '0.5vh double var(--text-color)',
           zIndex: 1001,
           transform: 'translateZ(0)',
@@ -197,7 +182,40 @@ function AppContent() {
         }}
         transition={{ duration: 0.5 }}
       >
-        {/* Monster Button (removed from here) */}
+        {/* Cyclone Trigger Button */}
+        <motion.button
+          onClick={handleCycloneTrigger}
+          className="cyclone-button"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            top: '20px',
+            background: 'linear-gradient(45deg, #1a1a1a, #333333)',
+            color: '#00ff88',
+            border: '3px solid #00ff88',
+            borderRadius: '18px',
+            fontFamily: 'VT323, monospace',
+            fontSize: '16px',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            padding: '12px 20px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 0 10px rgba(0, 255, 136, 0.5), inset 0 0 5px rgba(0, 255, 136, 0.3)',
+            position: 'relative',
+            overflow: 'hidden',
+            textShadow: '0 0 5px rgba(0, 255, 136, 0.5)'
+          }}
+          whileHover={{ 
+            scale: 1.05,
+            boxShadow: '0 0 15px rgba(0, 255, 136, 0.7), inset 0 0 8px rgba(0, 255, 136, 0.5)'
+          }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span style={{ fontSize: '20px' }}>🌪️</span>
+          <span>TRIGGER CYCLONE</span>
+        </motion.button>
 
         {/* Color Balls! Button (remains here) */}
         <motion.button
@@ -364,37 +382,37 @@ function AppContent() {
           position: 'relative'
         }}>
           <span style={{ color: '#FFD700' }}>Welcome to Botfolio 🧠</span>
-        <br />
+          <br />
           <small style={{ fontSize: 'clamp(12px, 1vw, 16px)', color: isDarkMode ? '#f2f2f2' : '#000000' }}>
-          An Interactive Fun Portfolio site...
-        </small>
-      </h1>
+            An Interactive Fun Portfolio site...
+          </small>
+        </h1>
 
-      {/* Pac-Man Button - positioned like warning button */}
-      <div style={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: '20px',
-        marginBottom: '20px',
-        pointerEvents: 'auto',
-        zIndex: 10000
-      }}>
-        <motion.button
-          onClick={handleSummonMonster}
-          className="pacman-button"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px'
-          }}
-        >
-          <span>⚠️</span>
-          <span>SUMMON PAC-MAN</span>
-        </motion.button>
-      </div>
-      
-      {/* Content Sections */}
+        {/* Pac-Man Button - positioned like warning button */}
+        <div style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '20px',
+          marginBottom: '20px',
+          pointerEvents: 'auto',
+          zIndex: 10000
+        }}>
+          <motion.button
+            onClick={handleSummonMonster}
+            className="pacman-button"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}
+          >
+            <span>⚠️</span>
+            <span>SUMMON PAC-MAN</span>
+          </motion.button>
+        </div>
+        
+        {/* Content Sections */}
         <motion.div
           animate={{
             x: isRearranged ? Math.random() * 200 - 100 : 0,
