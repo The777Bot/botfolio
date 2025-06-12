@@ -8,6 +8,8 @@ import ArcadeLauncher from './components/ArcadeLauncher';
 import RunnerCharacter from './components/RunnerCharacter';
 import CycloneEffect from './components/CycloneEffect';
 import MonsterEffect from './components/MonsterEffect';
+import WeatherSystem from './components/WeatherSystem';
+import './components/WeatherSystem.css';
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
@@ -92,6 +94,7 @@ function AppContent() {
       overflow: 'hidden',
       minHeight: '100vh'
     }}>
+      <WeatherSystem />
       {/* Fixed Header */}
       <motion.header
         animate={{
