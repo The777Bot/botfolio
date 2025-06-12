@@ -135,25 +135,7 @@ function AppContent() {
         ubadahme@gmail.com
       </motion.header>
 
-      {/* Monster Button */}
-      <motion.button
-        onClick={handleSummonMonster}
-        className="pacman-button"
-        style={{
-          position: 'fixed',
-          top: '87vh',
-          right: '1vw',
-          zIndex: 10000,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px'
-        }}
-      >
-        <span>⚠️</span>
-        <span>SUMMON PAC-MAN</span>
-      </motion.button>
-
-      {/* Fixed Dark Mode Toggle */}
+      {/* Fixed Dark Mode Toggle (restored to original position) */}
       <div
         onClick={toggleDarkMode}
         style={{
@@ -194,10 +176,60 @@ function AppContent() {
         </div>
       </div>
 
+      {/* --- Grouped Fixed Buttons (now only Color Balls!) --- */}
+      <motion.div
+        style={{
+          position: 'fixed',
+          top: '50%',
+          right: '1vw',
+          zIndex: 10000,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: '25px',
+          transform: 'translateY(-50%) translateZ(0)',
+          willChange: 'transform'
+        }}
+        animate={{
+          x: isRearranged ? Math.random() * 50 - 25 : 0,
+          y: isRearranged ? Math.random() * 50 - 25 : 0,
+          rotate: isRearranged ? Math.random() * 10 - 5 : 0
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Monster Button (removed from here) */}
+
+        {/* Color Balls! Button (remains here) */}
+        <motion.button
+          id="color-ball-trigger"
+          style={{
+            position: 'relative',
+            bottom: '0',
+            right: '0',
+            padding: '10px 20px',
+            background: 'linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontFamily: 'Press Start 2P',
+            fontSize: '12px',
+            zIndex: 1001,
+            animation: 'rainbow-glow 3s linear infinite'
+          }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          Color Balls!
+        </motion.button>
+
+        {/* Warning Button (BlackHoleTrap) is now separate again) */}
+      </motion.div>
+
       {/* Monster Effect */}
       <MonsterEffect isActive={isMonsterActive} onComplete={handleMonsterComplete} />
 
-      {/* Content Area - This will shake */}
+      {/* Content Area - This will shake */} 
       <div className="content-area" style={{
         position: 'relative',
         minHeight: '100vh',
@@ -337,8 +369,32 @@ function AppContent() {
           An Interactive Fun Portfolio site...
         </small>
       </h1>
+
+      {/* Pac-Man Button - positioned like warning button */}
+      <div style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '20px',
+        marginBottom: '20px',
+        pointerEvents: 'auto',
+        zIndex: 10000
+      }}>
+        <motion.button
+          onClick={handleSummonMonster}
+          className="pacman-button"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
+          }}
+        >
+          <span>⚠️</span>
+          <span>SUMMON PAC-MAN</span>
+        </motion.button>
+      </div>
       
-        {/* Content Sections */}
+      {/* Content Sections */}
         <motion.div
           animate={{
             x: isRearranged ? Math.random() * 200 - 100 : 0,
@@ -348,14 +404,14 @@ function AppContent() {
           transition={{ duration: 0.5 }}
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'center', // Center the main content area
             width: '100%',
             position: 'relative',
             gap: '2vw',
             padding: '0 2vw'
           }}
         >
-          {/* Left Section - GitHub Window */}
+          {/* Left Section - GitHub Window (unchanged width) */}
           <motion.section
             animate={{
               x: isRearranged ? Math.random() * 150 - 75 : 0,
@@ -377,7 +433,7 @@ function AppContent() {
             <GithubContributions />
           </motion.section>
 
-          {/* Center Section - Main Content */}
+          {/* Center Section - Main Content (now holds games) */}
           <motion.section
             animate={{
               x: isRearranged ? Math.random() * 150 - 75 : 0,
@@ -386,16 +442,21 @@ function AppContent() {
             }}
             transition={{ duration: 0.5 }}
             style={{
-              width: '60%',
+              width: '60%', // Increased width to hold games
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'flex-start'
+              alignItems: 'flex-start',
+              flexWrap: 'wrap', // Allow games to wrap if screen is small
+              gap: '1vw', // Gap between games
             }}
           >
-            <h2 className="text-3x1 font-bold mb-4">IN DEVELOPMENT ...🏗️</h2>
+            {/* Moved Games Here */}
+            <ArcadeLauncher />
+            <SpaceInvader />
+            <ParkourRunner />
           </motion.section>
 
-          {/* Right Section - Arcade Game */}
+          {/* Right Section (now minimized or empty) */}
           <motion.section
             animate={{
               x: isRearranged ? Math.random() * 150 - 75 : 0,
@@ -404,7 +465,7 @@ function AppContent() {
             }}
             transition={{ duration: 2 }}
             style={{ 
-              width: '20%',
+              width: '20%', // Minimized width or could be 0
               padding: '1vw',
               color: 'var(--text-color)',
               display: 'flex',
@@ -412,11 +473,22 @@ function AppContent() {
               gap: '1vw'
             }}
           >
-            <ArcadeLauncher />
-            <SpaceInvader />
-            <ParkourRunner />
+            {/* This section is now empty or contains other minor elements */}
           </motion.section>
         </motion.div>
+
+        {/* Warning Button (BlackHoleTrap) - moved to center below games */}
+        <div style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '40px', // Add some space below the games
+          marginBottom: '40px', // Add some space above the footer
+          pointerEvents: 'auto', // Ensure button is clickable
+          zIndex: 10000 // Ensure it's above other elements if needed
+        }}>
+          <BlackHoleTrap />
+        </div>
 
         {/* Interactive Elements */}
         <div style={{
@@ -431,7 +503,6 @@ function AppContent() {
           <RunnerCharacter />
           <WavyBlob />
           <WigglyWorm />
-          <BlackHoleTrap />
         </div>
       </div>
 
@@ -467,30 +538,6 @@ function AppContent() {
       <CycloneEffect isActive={isCycloneActive} />
 
       <ColorBalls />
-
-      <motion.button
-        id="color-ball-trigger"
-        style={{
-          position: 'fixed',
-          bottom: '230px',
-          right: '920px',
-          padding: '10px 20px',
-          background: 'linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)',
-          color: 'white',
-          border: 'none',
-          
-          borderRadius: '5px',
-          cursor: 'pointer',
-          fontFamily: 'Press Start 2P',
-          fontSize: '12px',
-          zIndex: 1001,
-          animation: 'rainbow-glow 3s linear infinite'
-        }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        Color Balls!
-      </motion.button>
     </div>
   );
 }
