@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const WeatherSystem = () => {
+const WeatherSystem = ({ isDarkMode }) => {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -28,35 +28,66 @@ const WeatherSystem = () => {
     const season = getSeason();
     const timeOfDay = getTimeOfDay();
     
-    // Weather probabilities based on season and time
-    const weatherOptions = {
-      spring: {
-        morning: ['rain', 'cloudy', 'windy'],
-        afternoon: ['sunny', 'rain', 'windy'],
-        evening: ['cloudy', 'windy', 'rain'],
-        night: ['windy', 'cloudy']
-      },
-      summer: {
-        morning: ['sunny', 'cloudy', 'windy'],
-        afternoon: ['sunny', 'windy'],
-        evening: ['cloudy', 'windy'],
-        night: ['windy', 'cloudy']
-      },
-      autumn: {
-        morning: ['rain', 'cloudy', 'windy'],
-        afternoon: ['cloudy', 'rain', 'windy'],
-        evening: ['rain', 'cloudy', 'windy'],
-        night: ['windy', 'rain']
-      },
-      winter: {
-        morning: ['snow', 'cloudy', 'windy'],
-        afternoon: ['snow', 'windy'],
-        evening: ['snow', 'cloudy', 'windy'],
-        night: ['windy', 'snow']
-      }
-    };
+    let options;
 
-    const options = weatherOptions[season][timeOfDay];
+    if (isDarkMode) {
+      // If in dark mode, prevent sunny weather
+      options = {
+        spring: {
+          morning: ['cloudy', 'windy', 'rain'],
+          afternoon: ['cloudy', 'windy', 'rain'],
+          evening: ['cloudy', 'windy', 'rain'],
+          night: ['windy', 'cloudy']
+        },
+        summer: {
+          morning: ['cloudy', 'windy'],
+          afternoon: ['cloudy', 'windy'],
+          evening: ['cloudy', 'windy'],
+          night: ['windy', 'cloudy']
+        },
+        autumn: {
+          morning: ['rain', 'cloudy', 'windy'],
+          afternoon: ['cloudy', 'rain', 'windy'],
+          evening: ['rain', 'cloudy', 'windy'],
+          night: ['windy', 'rain']
+        },
+        winter: {
+          morning: ['snow', 'cloudy', 'windy'],
+          afternoon: ['snow', 'windy'],
+          evening: ['snow', 'cloudy', 'windy'],
+          night: ['windy', 'snow']
+        }
+      }[season][timeOfDay];
+    } else {
+      // Original weather options for light mode
+      options = {
+        spring: {
+          morning: ['rain', 'cloudy', 'windy'],
+          afternoon: ['sunny', 'rain', 'windy'],
+          evening: ['cloudy', 'windy', 'rain'],
+          night: ['windy', 'cloudy']
+        },
+        summer: {
+          morning: ['sunny', 'cloudy', 'windy'],
+          afternoon: ['sunny', 'windy'],
+          evening: ['cloudy', 'windy'],
+          night: ['windy', 'cloudy']
+        },
+        autumn: {
+          morning: ['rain', 'cloudy', 'windy'],
+          afternoon: ['cloudy', 'rain', 'windy'],
+          evening: ['rain', 'cloudy', 'windy'],
+          night: ['windy', 'rain']
+        },
+        winter: {
+          morning: ['snow', 'cloudy', 'windy'],
+          afternoon: ['snow', 'windy'],
+          evening: ['snow', 'cloudy', 'windy'],
+          night: ['windy', 'snow']
+        }
+      }[season][timeOfDay];
+    }
+
     return options[Math.floor(Math.random() * options.length)];
   };
 

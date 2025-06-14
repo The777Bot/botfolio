@@ -25,6 +25,7 @@ function AppContent() {
   const [isCycloneActive, setIsCycloneActive] = useState(false);
   const [isRearranged, setIsRearranged] = useState(false);
   const [isMonsterActive, setIsMonsterActive] = useState(false);
+  const [isGrayscale, setIsGrayscale] = useState(false);
   const cooldownRef = useRef(false);
   const timeoutsRef = useRef({
     cyclone: null,
@@ -92,9 +93,11 @@ function AppContent() {
       color: 'var(--text-color)',
       position: 'relative',
       overflow: 'hidden',
-      minHeight: '100vh'
+      minHeight: '100vh',
+      filter: isGrayscale ? 'grayscale(100%)' : 'none',
+      transition: 'filter 0.3s ease'
     }}>
-      <WeatherSystem />
+      <WeatherSystem isDarkMode={isDarkMode} />
       {/* Fixed Header */}
       <motion.header
         animate={{
@@ -124,45 +127,49 @@ function AppContent() {
       </motion.header>
 
       {/* Fixed Dark Mode Toggle (restored to original position) */}
-      <div
+      <motion.button
         onClick={toggleDarkMode}
         style={{
           position: 'fixed',
-          top: '8vh',
-          right: '94vw',
+          top: '100px',
+          left: '20px',
+          zIndex: 1000,
           width: 'clamp(40px, 5vw, 50px)',
           height: 'clamp(30px, 2vh, 40px)',
-          background: isDarkMode ? '#2d2d2d' : '#f2aeb9',
           borderRadius: '15px',
+          background: isDarkMode ? '#2d2d2d' : '#f2aeb9',
+          border: '2px solid ' + (isDarkMode ? '#f2f2f2' : '#2d2d2d'),
           cursor: 'pointer',
-          zIndex: 10000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           transition: 'all 0.3s ease',
-          border: '2px solid var(--text-color)',
-          boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)',
-          transform: 'translateZ(0)',
-          willChange: 'transform'
+          boxShadow: '0 0 10px rgba(0,0,0,0.5)'
         }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
       >
-        <div
-          style={{ 
-            position: 'absolute',
-            top: '2px',
-            left: isDarkMode ? 'calc(100% - 26px)' : '2px',
-            width: 'clamp(16px, 1.5vw, 24px)',
-            height: 'clamp(16px, 1.5vw, 24px)',
-            background: isDarkMode ? '#f2aeb9' : '#2d2d2d',
+        <motion.div
+          style={{
+            width: '22px',
+            height: '22px',
             borderRadius: '50%',
-            transition: 'all 0.3s ease',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 'clamp(10px, 1vw, 12px)'
+            background: isDarkMode ? '#f2aeb9' : '#2d2d2d',
+            position: 'absolute',
+            left: isDarkMode ? 'calc(100% - 26px)' : '2px',
+            transition: 'all 0.3s ease'
           }}
-        >
+        />
+        <span style={{
+          position: 'absolute',
+          color: isDarkMode ? '#2d2d2d' : '#f2f2f2',
+          fontSize: '18px',
+          left: isDarkMode ? '8px' : 'auto',
+          right: isDarkMode ? 'auto' : '8px'
+        }}>
           {isDarkMode ? '🌞' : '🌙'}
-        </div>
-      </div>
+        </span>
+      </motion.button>
 
       {/* --- Grouped Fixed Buttons (now only Color Balls!) --- */}
       <motion.div
@@ -559,6 +566,43 @@ function AppContent() {
       <CycloneEffect isActive={isCycloneActive} />
 
       <ColorBalls />
+
+      {/* Grayscale Button */}
+      <motion.button
+        onClick={() => setIsGrayscale(!isGrayscale)}
+        style={{
+          position: 'fixed',
+          left: '20px',
+          top: '160px',
+          background: 'linear-gradient(45deg, #1a1a1a, #333333)',
+          color: isGrayscale ? '#00ff88' : '#ffffff',
+          border: '3px solid rgb(45, 65, 56)',
+          borderRadius: '18px',
+          fontFamily: 'VT323, monospace',
+          fontSize: '16px',
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+          padding: '8px 16px',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          boxShadow: isGrayscale 
+            ? '0 0 15px rgba(0, 255, 136, 0.7), inset 0 0 8px rgba(0, 255, 136, 0.5)'
+            : '0 0 10px rgba(0, 255, 136, 0.5), inset 0 0 5px rgba(0, 255, 136, 0.3)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          textShadow: '0 0 5px rgba(0, 255, 136, 0.5)'
+        }}
+        whileHover={{ 
+          scale: 1.05,
+          boxShadow: '0 0 15px rgba(0, 255, 136, 0.7), inset 0 0 8px rgba(0, 255, 136, 0.5)'
+        }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <span style={{ fontSize: '20px' }}>🎨</span>
+        <span>{isGrayscale ? 'RESTORE COLORS' : 'GRAYSCALE'}</span>
+      </motion.button>
     </div>
   );
 }
